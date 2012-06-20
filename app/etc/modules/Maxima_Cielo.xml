@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<config>
+    <modules>
+        <Maxima_Cielo>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Maxima_Cielo>
+    </modules>
+</config>

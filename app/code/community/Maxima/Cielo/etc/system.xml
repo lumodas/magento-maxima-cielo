@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+
+<config>
+	<sections>
+        <payment translate="label" module="payment">
+			<groups>
+		      	<Maxima_Cielo_Cc translate="label">
+                
+					<label>Cartão de Crédito - Cielo - Máxima</label>
+					<sort_order>675</sort_order>
+					<show_in_default>1</show_in_default>
+				  	<show_in_website>1</show_in_website>
+				  	<show_in_store>1</show_in_store>
+                    
+                    <comment>
+                        <![CDATA[
+                        <div>
+                            Versão: 1.0.0<br />
+							Este módulo foi desenvolvido pela Máxima Sistemas<br />
+							Contato: contato@maximasistemas.com.br
+                        </div>
+                        ]]>
+                    </comment>
+				  	
+					<fields>
+                    
+				      	<active translate="label">
+							<label>Enabled</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>1</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+					  		<show_in_store>1</show_in_store>
+					    </active>
+					    <title translate="label">
+					  		<label>Title</label>
+					  		<frontend_type>text</frontend_type>
+					  		<sort_order>2</sort_order>
+					  		<show_in_default>1</show_in_default>
+					  		<show_in_website>1</show_in_website>
+					  		<show_in_store>1</show_in_store>
+							<comment>
+							<![CDATA[
+							<div>
+							    Título que aparecerá para o cliente
+							</div>
+							]]>
+						    </comment>
+				      	</title>
+					    <order_status translate="label">
+							<label>New Order Status</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_order_status_new</source_model>
+					  		<sort_order>3</sort_order>
+					  		<show_in_default>1</show_in_default>
+					  		<show_in_website>1</show_in_website>
+					  		<show_in_store>1</show_in_store>
+				      	</order_status>
+						<max_parcels_number translate="label">
+							<label>Núm. máximo de parcelas</label>
+							<frontend_type>select</frontend_type>
+							<sort_order>4</sort_order>
+                            <source_model>Maxima_Cielo_Model_Cc_MaxInstallments</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</max_parcels_number>
+						<installments_type translate="label">
+							<label>Tipo de parcelamento</label>
+							<frontend_type>select</frontend_type>
+							<sort_order>5</sort_order>
+                            <source_model>Maxima_Cielo_Model_Cc_InstallmentType</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</installments_type>
+						<cielo_number translate="label">
+							<label>Núm. Inscrição Cielo</label>
+					  		<frontend_type>text</frontend_type>
+					  		<sort_order>6</sort_order>
+					  		<show_in_default>1</show_in_default>
+					  		<show_in_website>1</show_in_website>
+					  		<show_in_store>1</show_in_store>
+				      	</cielo_number>
+						<cielo_key translate="label">
+							<label>Chave Cielo</label>
+					  		<frontend_type>text</frontend_type>
+					  		<sort_order>7</sort_order>
+					  		<show_in_default>1</show_in_default>
+					  		<show_in_website>1</show_in_website>
+					  		<show_in_store>1</show_in_store>
+				      	</cielo_key>
+			  	     </fields>
+                </Maxima_Cielo_Cc>
+				
+				
+				<Maxima_Cielo_Dc translate="label">
+                
+					<label>Cartão de Débito - Cielo - Máxima</label>
+					<sort_order>675</sort_order>
+					<show_in_default>1</show_in_default>
+				  	<show_in_website>1</show_in_website>
+				  	<show_in_store>1</show_in_store>
+                    
+                    <comment>
+                        <![CDATA[
+                        <div>
+                            Versão: 1.0.0<br />
+                            Este módulo foi desenvolvido pela Máxima Sistemas<br />
+							Contato: contato@maximasistemas.com.br
+                            <br /><br /><hr />
+                        </div>
+                        ]]>
+                    </comment>
+				  	
+					<fields>
+                    
+				      	<active translate="label">
+							<label>Enabled</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>1</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+					  		<show_in_store>1</show_in_store>
+					    </active>
+					    <title translate="label">
+					  		<label>Title</label>
+					  		<frontend_type>text</frontend_type>
+					  		<sort_order>2</sort_order>
+					  		<show_in_default>1</show_in_default>
+					  		<show_in_website>1</show_in_website>
+					  		<show_in_store>1</show_in_store>
+							<comment>
+							<![CDATA[
+							<div>
+							    Título que aparecerá para o cliente
+							</div>
+							]]>
+						    </comment>
+				      	</title>
+					    <order_status translate="label">
+							<label>New Order Status</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_order_status_new</source_model>
+					  		<sort_order>3</sort_order>
+					  		<show_in_default>1</show_in_default>
+					  		<show_in_website>1</show_in_website>
+					  		<show_in_store>1</show_in_store>
+				      	</order_status>
+						<cielo_number translate="label">
+							<label>Núm. Inscrição Cielo</label>
+					  		<frontend_type>text</frontend_type>
+					  		<sort_order>6</sort_order>
+					  		<show_in_default>1</show_in_default>
+					  		<show_in_website>1</show_in_website>
+					  		<show_in_store>1</show_in_store>
+				      	</cielo_number>
+						<cielo_key translate="label">
+							<label>Chave Cielo</label>
+					  		<frontend_type>text</frontend_type>
+					  		<sort_order>7</sort_order>
+					  		<show_in_default>1</show_in_default>
+					  		<show_in_website>1</show_in_website>
+					  		<show_in_store>1</show_in_store>
+				      	</cielo_key>
+			  	     </fields>
+                </Maxima_Cielo_Dc>
+            </groups>
+		</payment>
+	</sections>
+</config>
