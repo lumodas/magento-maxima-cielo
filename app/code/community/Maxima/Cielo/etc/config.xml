@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+
+	<config>
+		
+		<modules>
+			<Maxima_Cielo>
+				<version>1.0.0</version>
+			</Maxima_Cielo>
+		</modules>
+		
+		<global>
+			<models>
+				<Maxima_Cielo>
+					<class>Maxima_Cielo_Model</class>
+				</Maxima_Cielo>
+			</models>
+			<resources>
+				<Maxima_Cielo_setup>
+					<setup>
+					<module>Maxima_Cielo</module>
+						<class>Mage_Sales_Model_Mysql4_Setup</class>
+					</setup>
+					<connection>
+						<use>core_setup</use>
+					</connection>
+				</Maxima_Cielo_setup>
+				<Maxima_Cielo_write>
+					<connection>
+						<use>core_write</use>
+					</connection>
+				</Maxima_Cielo_write>
+				<Maxima_Cielo_read>
+					<connection>
+						<use>core_read</use>
+					</connection>
+				</Maxima_Cielo_read>
+			</resources>
+			<helpers>
+				<Maxima_Cielo>
+					<class>Maxima_Cielo_Helper</class>
+				</Maxima_Cielo>
+			</helpers>
+			<blocks>
+				<Maxima_Cielo>
+					<class>Maxima_Cielo_Block</class>
+				</Maxima_Cielo>
+			</blocks>
+		</global>
+		
+		<frontend>
+			<routers>
+				<Maxima_Cielo>
+					<use>standard</use>
+					<args>
+						<module>Maxima_Cielo</module>
+						<frontName>cielo</frontName>
+					</args>
+				</Maxima_Cielo>
+			</routers>
+			<layout>
+				<updates>
+					<Maxima_Cielo>
+						<file>cielo.xml</file>
+					</Maxima_Cielo>
+				</updates>
+			</layout>
+		</frontend>
+		
+		<default>
+			<payment>
+				<Maxima_Cielo_Cc>
+					<model>Maxima_Cielo_Model_Cc</model>
+					<active>0</active>
+					<title>Cartão de Crédito</title>
+					<max_parcels_number>1</max_parcels_number>
+					<installments_type>2</installments_type>
+					<cielo_number>1001734898</cielo_number>
+					<cielo_key>e84827130b9837473681c2787007da5914d6359947015a5cdb2b8843db0fa832</cielo_key>
+				</Maxima_Cielo_Cc>
+			</payment>
+			<payment>
+				<Maxima_Cielo_Dc>
+					<model>Maxima_Cielo_Model_Dc</model>
+					<active>0</active>
+					<title>Cartão de Débito</title>
+					<cielo_number>1001734898</cielo_number>
+					<cielo_key>e84827130b9837473681c2787007da5914d6359947015a5cdb2b8843db0fa832</cielo_key>
+				</Maxima_Cielo_Dc>
+			</payment>
+		</default>
+
+	</config>

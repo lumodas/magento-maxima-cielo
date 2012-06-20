@@ -1,0 +1,46 @@
+<fieldset class="form-list">
+	<ul id="payment_form_Maxima_Cielo_Cc" style="display:none;">
+		<li class="first">
+			<br>
+			<ul class="card-logo">
+
+				<li style="width: 20%; float: left;">
+					<label for="card-VI"><img src="<?php echo $this->getSkinUrl(); ?>images/cielo/Visa.jpg"><br>
+						<input name="payment[cc_type]" type="radio" value="visa" id="cielo_cc_type" class="validate-one-required-by-name">
+					</label>
+				</li>
+
+				<li style="width: 20%; float: left;">
+					<label for="card-MC"><img src="<?php echo $this->getSkinUrl(); ?>images/cielo/Master.jpg"><br>
+						<input name="payment[cc_type]" type="radio" value="mastercard" id="cielo_cc_type" class="validate-one-required-by-name">
+					</label>
+				</li>
+
+				<li style="width: 20%; float: left;">
+					<label for="card-DN"><img src="<?php echo $this->getSkinUrl(); ?>images/cielo/Diners.jpg"><br>
+						<input name="payment[cc_type]" type="radio" value="diners" id="cielo_cc_type" class="validate-one-required-by-name">
+					</label>
+				</li>
+				
+				<li style="width: 20%; float: left;">
+					<label for="card-DN"><img src="<?php echo $this->getSkinUrl(); ?>images/cielo/Discover.png"><br>
+						<input name="payment[cc_type]" type="radio" value="discover" id="cielo_cc_type" class="validate-one-required-by-name">
+					</label>
+				</li>
+
+			</ul>
+		</li>
+
+		<li>
+			<label for="Maxima_Cielo_parcelas"><?php echo $this->__('Parcelas') ?> </label><br />
+			<div class="input-box">
+				<select id="Maxima_Cielo_parcelas" name="payment[parcels_number]">
+					<?php foreach($this->getInstallments() as $parcel): ?>
+					<option value="<?php echo $parcel['num'] ?>"><?php echo $parcel['label'] ?></option>
+					<?php endforeach ?>
+				</select>
+			</div>
+		</li>
+		<br />
+	</ul>
+</fieldset>
