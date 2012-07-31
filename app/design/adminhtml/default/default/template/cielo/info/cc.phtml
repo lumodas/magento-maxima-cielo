@@ -1,0 +1,68 @@
+Cartão de Crédito Cielo
+<br /><br />
+<?php
+	
+	
+	if($_info = $this->getInfo())
+	{
+		if($_info->getOrder())
+		{
+			$payment = $_info->getOrder()->getPayment();
+			
+			if($payment->getAdditionalInformation ('Cielo_error'))
+			{
+				echo "Erro na transação";
+			}
+			else
+			{
+				$tid = $payment->getAdditionalInformation ('Cielo_tid');
+				$status = $payment->getAdditionalInformation ('Cielo_status');
+				
+				$html  = "<b>ID Transação</b>: " . $tid . "<br />";
+				$html .= "<b>Status</b>: ";
+				
+				// possiveis status 
+				// -1 nao foi possivel consultar
+				// 0 criada
+				// 1 em andamento
+				// 2 autenticada
+				// 3 nao autenticada
+				// 4 autorizada ou pendente de captura
+				// 5 nao autorizada
+				// 6 capturada
+				// 8 nao capturada
+				// 9 cancelada
+				// 10 em autenticacao
+				
+				switch($status)
+				{
+					case 1:
+						$html .= "Em andamento";
+						break;
+					case 2:
+						$html .= "Autenticada";
+						break;
+					case 4:
+						$html .= "Pendente";
+						break;
+					case 5:
+						$html .= "Não autorizada";
+						break;
+					case 6:
+						$html .= "Concluída";
+						break;
+					case 9:
+						$html .= "Cancelada";
+						break;
+					case 10:
+						$html .= "Em autenticação";
+						break;
+					default:
+						$html .= "Erro";
+				}
+				
+				echo $html . "<br />";
+			}
+		}
+	}
+?>
