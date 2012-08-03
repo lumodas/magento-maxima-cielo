@@ -1,0 +1,16 @@
+#summary One-sentence summary of this page.
+
+= Introdução =
+
+Módulo gratuito para o Magento de pagamento, utilizando o webservice da Cielo.  
+
+Este módulo possui uma licença livre e pode ser utilizado e modificado, de acordo com a licesa GNU GPL v3 (http://www.gnu.org/copyleft/gpl.html). Ele esté em uma versão inicial e passando por testes e melhorias, mas já funciona utilizando o ambiente de pagamento da Cielo. Para mais instruções de como instalá-lo e utilizá-lo, utilize os links desta Wiki.
+
+Atualmente a instalação é somente do modo manual (conforme descrito na seção de instalação), mas em breve irei enviar o módulo para o Magento Connect.
+
+= Teste e Contato =
+
+Peço que utilizem o módulo e dêem opiniões, dicas, críticas e sugestões, afim de tornarem este módulo cada vez melhor. Assim teremos uma opção aberta de qualidade para instalarmos nas nossas lojas virtuais.
+
+Fiquem a vontade para fazer modificações e também repassarem para os demais usuários. Segue meu e-mail para contato:
+  * lawsann@gmail.com
