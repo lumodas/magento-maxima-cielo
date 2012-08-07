@@ -4,7 +4,7 @@
 		
 		<modules>
 			<Maxima_Cielo>
-				<version>1.0.0</version>
+				<version>1.0.1</version>
 			</Maxima_Cielo>
 		</modules>
 		
@@ -71,6 +71,8 @@
 				<Maxima_Cielo_Cc>
 					<model>Maxima_Cielo_Model_Cc</model>
 					<active>0</active>
+					<environment>https://qasecommerce.cielo.com.br</environment>
+					<ssl_file></ssl_file>
 					<title>Cartão de Crédito</title>
 					<max_parcels_number>1</max_parcels_number>
 					<installments_type>2</installments_type>
@@ -82,6 +84,8 @@
 				<Maxima_Cielo_Dc>
 					<model>Maxima_Cielo_Model_Dc</model>
 					<active>0</active>
+					<environment>https://qasecommerce.cielo.com.br</environment>
+					<ssl_file></ssl_file>
 					<title>Cartão de Débito</title>
 					<cielo_number>1001734898</cielo_number>
 					<cielo_key>e84827130b9837473681c2787007da5914d6359947015a5cdb2b8843db0fa832</cielo_key>
