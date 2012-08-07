@@ -87,9 +87,11 @@ class Maxima_Cielo_Model_Dc extends Mage_Payment_Model_Method_Abstract
 		$paymentParcels 	= $this->getConfigData('installments_type', $storeId);
 		$cieloNumber 		= $this->getConfigData('cielo_number', $storeId);
 		$cieloKey 			= $this->getConfigData('cielo_key', $storeId);
+		$environment 		= $this->getConfigData('environment', $storeId);
+		$sslFile	 		= $this->getConfigData('ssl_file', $storeId);
 		
 		// cria instancia do pedido
-		$webServiceOrder = Mage::getModel('Maxima_Cielo/webServiceOrder');
+		$webServiceOrder = Mage::getModel('Maxima_Cielo/webServiceOrder', array('enderecoBase' => $environment, 'caminhoCertificado' => $sslFile));
 		
 		// preenche dados coletados
 		$webServiceOrderData = array

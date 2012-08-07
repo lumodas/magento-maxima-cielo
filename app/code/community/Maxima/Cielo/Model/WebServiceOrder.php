@@ -34,8 +34,9 @@
 		
 		function __construct($params)
 		{
-			$baseURL 			= (isset($params['enderecoBase']))			? $params['enderecoBase'] 			: "https://qasecommerce.cielo.com.br";
-			$certificatePath 	= (isset($params['caminhoCertificado']))	? $params['caminhoCertificado'] 	: Mage::getModuleDir('', 'Maxima_Cielo') . "/ssl/VeriSignClass3PublicPrimaryCertificationAuthority-G5.crt";
+			$baseURL 			= (isset($params['enderecoBase']))		? $params['enderecoBase'] 			: "https://qasecommerce.cielo.com.br";
+			$certificatePath 	= (isset($params['caminhoCertificado']) && 
+								   $params['caminhoCertificado'] != "")	? $params['caminhoCertificado'] 	: Mage::getModuleDir('', 'Maxima_Cielo') . "/ssl/VeriSignClass3PublicPrimaryCertificationAuthority-G5.crt";
 			
 			$this->_webServiceURL = $baseURL . "/servicos/ecommwsec.do";
 			$this->_SSLCertificatePath = $certificatePath;
@@ -102,6 +103,12 @@
 			{
 				if($this->_sendRequest("mensagem=" . $msg, "Transacao"))
 				{
+					if($this->_hasConsultationError())
+					{
+						Mage::log($this->_transactionError);
+						return false;
+					}
+					
 					$xml = simplexml_load_string($this->_xmlResponse);
 					
 					// pega dados do xml
@@ -112,6 +119,11 @@
 				}
 				
 				$maxAttempts--;
+			}
+			
+			if($maxAttempts == 0)
+			{
+				Mage::log("[CIELO] Não conseguiu consultar o servidor.");
 			}
 			
 			return false;
@@ -156,6 +168,11 @@
 				$maxAttempts--;
 			}
 			
+			if($maxAttempts == 0)
+			{
+				Mage::log("[CIELO] Não conseguiu consultar o servidor.");
+			}
+			
 			return false;
 		}
 		
@@ -188,7 +205,7 @@
 			// retorno de erro da cielo
 			if($xml->getName() == "erro")
 			{
-				$this->_transactionError = "[CIELO: " . $xml->codigo . "] " . $xml->mensagem;
+				$this->_transactionError = "[CIELO: " . $xml->codigo . "] " . utf8_decode($xml->mensagem);
 				return true;
 			}
 			
@@ -241,7 +258,6 @@
 			
 			if(!$this->_xmlResponse)
 			{
-				//Mage::log("curl: " . curl_error($curl_session));
 				return false;
 			}
 			
