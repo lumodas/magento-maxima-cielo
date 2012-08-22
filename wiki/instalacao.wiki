@@ -14,7 +14,7 @@ Uma vez que os arquivos estejam no seu computador, basta copiá-los para a pasta
 
 #Limpe o cache e a sessão:
 
-Para que seu módulo seja enxergado pelo Magento, recomendamos que limpe as pastas [InstalacaoMagento]/var/cache e [InstalacaoMagento]var/session.
+Para que seu módulo seja enxergado pelo Magento, recomendamos que limpe as pastas \[InstalacaoMagento\]/var/cache e [InstalacaoMagento]var/session.
 
 Pronto! Agora seu módulo está instalado e pronto para ser configurado / utilizado. Para assegurar-se de que ele esteja instalado, vá no backend do Magento, no Menu *Sistema -> Configuração -> Avançado* e verifique se ele está listado dentre os módulos em *Desativar Saída de Módulos*.
 
