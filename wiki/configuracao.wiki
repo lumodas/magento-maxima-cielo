@@ -1,0 +1,5 @@
+#summary One-sentence summary of this page.
+
+= Configuração =
+
+Por padrão, os métodos de pagamento Cartão de Débito e Crédito vêm desativados. Para ativá-los, você deve ir ao menu *Sistema -> Configuração -> Métodos de Pagamento* e editar as configurações básicas nas abas Cartão de Débito Cielo e Cartão de Crédito Cielo.
