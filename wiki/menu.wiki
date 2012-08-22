@@ -1,3 +1,5 @@
 *[introducao Introdução]*
 
 *[instalacao Instalação]*
+
+*[configuracao Configuração]*
