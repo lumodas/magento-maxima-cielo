@@ -6,12 +6,12 @@ Por padrão, os métodos de pagamento Cartão de Débito e Crédito vêm desativ
 
 Os parâmetros básicos são listados abaixo:
 
-*Ativado: flag que ativa ou desativa este método de pagamento;
-*Título: título que irá aparecer no frontend do Magento quando o cliente estiver realizando uma compra;
-*Ambiente: aqui escolhemos se o ambiente da Cielo que estamos utilizando é o ambiente de teste ou o ambiente de produção. Isto determina qual link (webservice) será utilizado pelo módulo;
-*Arquivo SSL: aqui devemos colocar o caminho do arquivo SSL no sistema de arquivos do servidor, de modo que ele não esteja em uma pasta acessível externamente, por motivos de segurança;
-*Status do Novo Pedido: status para o qual o pedido será colocado quando o cliente realizou a compra, mas ainda não efetuou o pagamento.
-*Núm. Inscrição Cielo: o número de inscrição do lojista na Cielo. Por padrão vem o valor para o ambiente de testes da Cielo, disponibilizado na loja de exemplo por ela publicada;
-*Chave Cielo: a chave do lojista na Cielo. Por padrão vem o valor para o ambiente de testes da Cielo, disponibilizado na loja de exemplo por ela publicada;
-*Num. máximo de parcelas: número máximo de parcelas permitido na hora de comprar um produto no frontend;
-*Tipo de parcelamento: forma de parcelamento da compra, pela Loja ou pela Administradora. A forma pela administradora tem muitas limitações (verifique as regras com a Cielo).
+  *Ativado: flag que ativa ou desativa este método de pagamento;
+  *Título: título que irá aparecer no frontend do Magento quando o cliente estiver realizando uma compra;
+  *Ambiente: aqui escolhemos se o ambiente da Cielo que estamos utilizando é o ambiente de teste ou o ambiente de produção. Isto determina qual link (webservice) será utilizado pelo módulo;
+  *Arquivo SSL: aqui devemos colocar o caminho do arquivo SSL no sistema de arquivos do servidor, de modo que ele não esteja em uma pasta acessível externamente, por motivos de segurança;
+  *Status do Novo Pedido: status para o qual o pedido será colocado quando o cliente realizou a compra, mas ainda não efetuou o pagamento.
+  *Núm. Inscrição Cielo: o número de inscrição do lojista na Cielo. Por padrão vem o valor para o ambiente de testes da Cielo, disponibilizado na loja de exemplo por ela publicada;
+  *Chave Cielo: a chave do lojista na Cielo. Por padrão vem o valor para o ambiente de testes da Cielo, disponibilizado na loja de exemplo por ela publicada;
+  *Num. máximo de parcelas: número máximo de parcelas permitido na hora de comprar um produto no frontend;
+  *Tipo de parcelamento: forma de parcelamento da compra, pela Loja ou pela Administradora. A forma pela administradora tem muitas limitações (verifique as regras com a Cielo).
