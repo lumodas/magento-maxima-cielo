@@ -15,3 +15,13 @@ Os parâmetros básicos são listados abaixo:
   * Chave Cielo: a chave do lojista na Cielo. Por padrão vem o valor para o ambiente de testes da Cielo, disponibilizado na loja de exemplo por ela publicada;
   * Num. máximo de parcelas: número máximo de parcelas permitido na hora de comprar um produto no frontend;
   * Tipo de parcelamento: forma de parcelamento da compra, pela Loja ou pela Administradora. A forma pela administradora tem muitas limitações (verifique as regras com a Cielo).
+
+
+== Homologação ==
+
+Quando for homologar a sua loja na Cielo, você deve alterar quatro configurações:
+
+  * Ambiente: este deve ser passado para *Produção*.
+  * Arquivo SSL: o arquivo SSL deve ser colocado em uma pasta que não possa ser acessível externamente, ou seja, não deve estar dentro da pasta *www* do Apache, muito menos na pasta do Magento. Assim, após colocá-lo em um local seguro, dê permissões para leitura para o mesmo e coloque o seu caminho neste campo da configuração, incluindo o nome do arquivo (por exemplo, /home/eu/ssl/arquivo-cielo.ssl);
+  * Núm. Inscrição Cielo: a Cielo irá lhe fornecer um número de inscrição do lojista adequado a ser colocado aqui;
+  * Chave Cielo: a Cielo irá lhe fornecer uma chave do lojista adequada a ser colocada aqui.
