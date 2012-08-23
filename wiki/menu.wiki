@@ -3,3 +3,5 @@
 *[instalacao Instalação]*
 
 *[configuracao Configuração]*
+
+*[grupo Grupo de Discussão]*
