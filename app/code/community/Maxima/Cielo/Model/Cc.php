@@ -112,6 +112,17 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 			'postbackURL'		=> Mage::getUrl('cielo/pay/verify'),
 		);
 		
+		// conforme mostrado no manual versao 2.0, pagina 11,
+		// caso o cartao seja Dinners, Discover, Elo ou Amex
+		// o valor do flag autorizar deve ser 3
+		if($ccType == "diners" || 
+		   $ccType == "discover" || 
+		   $ccType == "elo" || 
+		   $ccType == "amex")
+		{
+			$webServiceOrderData['autorize'] = '3';
+		}
+		
 		if($paymentType == "1")
 		{
 			$webServiceOrderData['paymentType'] = $paymentType;
