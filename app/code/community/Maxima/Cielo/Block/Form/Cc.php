@@ -26,10 +26,14 @@ class Maxima_Cielo_Block_Form_Cc extends Mage_Payment_Block_Form
 		
 		for($i = 1; $i <= $max_parcels; $i++)
 		{
-			$parcels[] = array("num" => $i, "label" => $i . "x");
+			if($i == 1)
+				$label = "&#192; vista (" . Mage::helper('core')->currency(($total), true, false) . ")";
+			else
+				$label = $i . "x sem juros (" . Mage::helper('core')->currency(($total / $i), true, false) . " cada)";
+			
+			$parcels[] = array("num" => $i, "label" => $this->htmlEscape($label));
 		}
 		
 		return $parcels;
 	}
-    
 }
