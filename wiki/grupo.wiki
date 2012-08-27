@@ -1,4 +1,4 @@
-# Google Groups
+#summary Google Groups
 
 = Grupo de Discussão =
 
