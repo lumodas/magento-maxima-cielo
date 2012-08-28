@@ -11,7 +11,7 @@ Cartão de Crédito Cielo
 			
 			if($payment->getAdditionalInformation ('Cielo_error'))
 			{
-				echo "Erro na transação";
+				echo "Erro na transação: " . $payment->getAdditionalInformation ('Cielo_error');
 			}
 			else
 			{
@@ -42,6 +42,9 @@ Cartão de Crédito Cielo
 					case 2:
 						$html .= "Autenticada";
 						break;
+					case 3:
+						$html .= "Não autenticada";
+						break;
 					case 4:
 						$html .= "Pendente";
 						break;
@@ -51,6 +54,9 @@ Cartão de Crédito Cielo
 					case 6:
 						$html .= "Concluída";
 						break;
+					case 8:
+						$html .= "Não capturada";
+						break;
 					case 9:
 						$html .= "Cancelada";
 						break;
@@ -58,7 +64,7 @@ Cartão de Crédito Cielo
 						$html .= "Em autenticação";
 						break;
 					default:
-						$html .= "Erro";
+						$html .= "Erro (código " . $status . ")";
 				}
 				
 				echo $html . "<br />";

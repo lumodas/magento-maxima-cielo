@@ -24,7 +24,7 @@ class Maxima_Cielo_Block_Verify extends Mage_Checkout_Block_Onepage_Success
 		}
 		else
 		{
-			$html .= "Houve um problema ao tentar realizar o pagamento. Para maiores informações, por favor entre em contato.";
+			$html .= "Seu pagamento não foi realizado com sucesso. Para maiores informações, por favor entre em contato.";
 		}
 		
 		return $html;
