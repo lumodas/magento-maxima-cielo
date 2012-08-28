@@ -24,7 +24,8 @@ class Maxima_Cielo_Block_Verify extends Mage_Checkout_Block_Onepage_Success
 		}
 		else
 		{
-			$html .= "Seu pagamento não foi realizado com sucesso. Para maiores informações, por favor entre em contato.";
+			$html .= "Seu pagamento não foi realizado com sucesso. Para maiores informações, por favor acesse o link do pedido 
+					  acima ou entre em contato conosco.<br />O ID da sua transação na Cielo é <b>" . $this->_cieloTid . "</b>.";
 		}
 		
 		return $html;
