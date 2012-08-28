@@ -34,38 +34,7 @@ Cartão de Crédito Cielo
 				// 9 cancelada
 				// 10 em autenticacao
 				
-				switch($status)
-				{
-					case 1:
-						$html .= "Em andamento";
-						break;
-					case 2:
-						$html .= "Autenticada";
-						break;
-					case 3:
-						$html .= "Não autenticada";
-						break;
-					case 4:
-						$html .= "Pendente";
-						break;
-					case 5:
-						$html .= "Não autorizada";
-						break;
-					case 6:
-						$html .= "Concluída";
-						break;
-					case 8:
-						$html .= "Não capturada";
-						break;
-					case 9:
-						$html .= "Cancelada";
-						break;
-					case 10:
-						$html .= "Em autenticação";
-						break;
-					default:
-						$html .= "Erro";
-				}
+				$html .= Mage::helper('Maxima_Cielo')->getStatusMessage($status);
 				
 				echo $html;
 			}
