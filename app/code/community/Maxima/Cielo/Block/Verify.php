@@ -18,7 +18,11 @@ class Maxima_Cielo_Block_Verify extends Mage_Checkout_Block_Onepage_Success
     {
 		$html = "";
 		
-		if($this->_cieloStatus == 6)
+		if($this->_cieloStatus == 6 || $this->_cieloStatus == 4)
+		{
+			$html .= "Sua compra foi faturada com êxito.<br />O ID da sua transação na Cielo é <b>" . $this->_cieloTid . "</b>.";
+		}
+		else if($this->_cieloStatus == 1 || $this->_cieloStatus == 2 || $this->_cieloStatus == 10)
 		{
 			$html .= "Sua compra foi faturada com êxito.<br />O ID da sua transação na Cielo é <b>" . $this->_cieloTid . "</b>.";
 		}
