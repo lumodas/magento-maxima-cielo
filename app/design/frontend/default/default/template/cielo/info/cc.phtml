@@ -17,24 +17,17 @@ Cartão de Crédito Cielo
 			{
 				$tid = $payment->getAdditionalInformation ('Cielo_tid');
 				$status = $payment->getAdditionalInformation ('Cielo_status');
+				$cardType = $payment->getAdditionalInformation ('Cielo_cardType');
+				$installments = $payment->getAdditionalInformation ('Cielo_installments');
 				
-				$html  = "<b>ID Transação</b>: " . $tid . "<br />";
-				$html .= "<b>Status</b>: ";
+				$allCards = Mage::getModel('Maxima_Cielo/cc_types')->toArray();
+				$cardType = $allCards[$cardType];
+				$installments = ($installments == 1) ? '&#192; vista' : $installments . " vezes";
 				
-				// possiveis status 
-				// -1 nao foi possivel consultar
-				// 0 criada
-				// 1 em andamento
-				// 2 autenticada
-				// 3 nao autenticada
-				// 4 autorizada ou pendente de captura
-				// 5 nao autorizada
-				// 6 capturada
-				// 8 nao capturada
-				// 9 cancelada
-				// 10 em autenticacao
-				
-				$html .= Mage::helper('Maxima_Cielo')->getStatusMessage($status);
+				$html = "<b>ID Transação</b>: " . $tid . "<br />";
+				$html .= "<b>Status</b>: " . Mage::helper('Maxima_Cielo')->getStatusMessage($status) . "<br />";
+				$html .= "<b>Bandeira</b>: " . $cardType . "<br />";
+				$html .= "<b>Parcelamento</b>: " . $installments;
 				
 				echo $html;
 			}

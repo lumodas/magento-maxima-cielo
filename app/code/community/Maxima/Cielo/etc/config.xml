@@ -4,7 +4,7 @@
 		
 		<modules>
 			<Maxima_Cielo>
-				<version>1.0.1</version>
+				<version>1.1.0</version>
 			</Maxima_Cielo>
 		</modules>
 		
@@ -17,8 +17,7 @@
 			<resources>
 				<Maxima_Cielo_setup>
 					<setup>
-					<module>Maxima_Cielo</module>
-						<class>Mage_Sales_Model_Mysql4_Setup</class>
+						<module>Maxima_Cielo</module>
 					</setup>
 					<connection>
 						<use>core_setup</use>
@@ -44,7 +43,60 @@
 				<Maxima_Cielo>
 					<class>Maxima_Cielo_Block</class>
 				</Maxima_Cielo>
+				<sales>
+					<rewrite>
+						<order_totals>Maxima_Cielo_Block_Sales_Order_Totals</order_totals>
+					</rewrite>
+				</sales>
+				<adminhtml>
+					<rewrite>
+						<sales_order_totals>Maxima_Cielo_Block_Adminhtml_Order_Totals</sales_order_totals>
+						<sales_order_invoice_totals>Maxima_Cielo_Block_Adminhtml_Order_Invoice_Totals</sales_order_invoice_totals>
+					</rewrite>
+				</adminhtml>
 			</blocks>
+			<sales>
+				<quote>
+					<totals>
+						<interest>
+							<class>Maxima_Cielo/quote_address_interest</class>
+							<after>shipping</after>
+							<before>grand_total</before>
+						</interest>
+					</totals>
+				</quote>
+				<order_invoice>
+					<totals>
+						<your_total>
+						<class>Maxima_Cielo/order_invoice_interest</class>
+						<after>shipping</after>
+						<before>grand_total</before>
+						</your_total>
+					</totals>
+				</order_invoice>
+			</sales>
+			<fieldsets>
+				<sales_convert_quote_address>
+					<interest>
+						<to_order>*</to_order>
+					</interest>
+					<base_interest>
+						<to_order>*</to_order>
+					</base_interest>
+				</sales_convert_quote_address>
+				<sales_convert_order>
+					<interest>
+						<to_invoice>*</to_invoice>
+						<to_shipment>*</to_shipment>
+						<to_cm>*</to_cm>
+					</interest>
+					<base_interest>
+						<to_invoice>*</to_invoice>
+						<to_shipment>*</to_shipment>
+						<to_cm>*</to_cm>
+					</base_interest>
+				</sales_convert_order>
+			</fieldsets>
 		</global>
 		
 		<frontend>
@@ -64,7 +116,29 @@
 					</Maxima_Cielo>
 				</updates>
 			</layout>
+			<translate>
+				<modules>
+				    <translations>
+				        <files>
+				            <default>Maxima_Cielo.csv</default>
+				        </files>
+				    </translations>
+				</modules>
+			</translate>
 		</frontend>
+		
+		<adminhtml>
+			<translate>
+				<modules>
+				    <translations>
+				        <files>
+				            <default>Maxima_Cielo.csv</default>
+				        </files>
+				    </translations>
+				</modules>
+			</translate>
+		</adminhtml>
+		
 		
 		<default>
 			<payment>
@@ -72,10 +146,13 @@
 					<model>Maxima_Cielo_Model_Cc</model>
 					<active>0</active>
 					<environment>https://qasecommerce.cielo.com.br</environment>
+					<card_types>visa,mastercard,diners,discover,elo,amex</card_types>
+					<auto_capture>1</auto_capture>
 					<ssl_file></ssl_file>
 					<title>Cartão de Crédito</title>
 					<max_parcels_number>1</max_parcels_number>
 					<installments_type>2</installments_type>
+					<auto_capture>1</auto_capture>
 					<cielo_number>1001734898</cielo_number>
 					<cielo_key>e84827130b9837473681c2787007da5914d6359947015a5cdb2b8843db0fa832</cielo_key>
 				</Maxima_Cielo_Cc>
@@ -87,6 +164,7 @@
 					<environment>https://qasecommerce.cielo.com.br</environment>
 					<ssl_file></ssl_file>
 					<title>Cartão de Débito</title>
+					<auto_capture>1</auto_capture>
 					<cielo_number>1001734898</cielo_number>
 					<cielo_key>e84827130b9837473681c2787007da5914d6359947015a5cdb2b8843db0fa832</cielo_key>
 				</Maxima_Cielo_Dc>

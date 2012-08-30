@@ -29,6 +29,32 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
         $info->setCcType($data->getCcType())
             ->setAdditionalData(serialize($additionaldata));
 		
+		
+		// pega dados de juros
+		$withoutInterest = intval(Mage::getStoreConfig('payment/Maxima_Cielo_Cc/installment_without_interest'));
+		$interestValue = floatval(Mage::getStoreConfig('payment/Maxima_Cielo_Cc/installment_interest_value'));
+		
+		
+		// verifica se há juros
+		if($data->getParcelsNumber() > $withoutInterest)
+		{
+			$installmentValue = Mage::helper('Maxima_Cielo')->calcInstallmentValue
+								(
+									$info->getQuote()->getGrandTotal(), 
+									$interestValue / 100, 
+									$data->getParcelsNumber()
+								);
+			
+			$interest = ($installmentValue * $data->getParcelsNumber()) - $info->getQuote()->getGrandTotal();
+			
+			$info->getQuote()->setInterest($info->getQuote()->getStore()->convertPrice($interest, false));
+			$info->getQuote()->setBaseInterest($interest);
+			
+			$info->getQuote()->setTotalsCollectedFlag(false)->collectTotals();
+			$info->getQuote()->save();
+		}
+		
+		
         return $this;
     }
 	
@@ -93,6 +119,7 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 		$paymentParcels 	= $this->getConfigData('installments_type', $storeId);
 		$cieloNumber 		= $this->getConfigData('cielo_number', $storeId);
 		$cieloKey 			= $this->getConfigData('cielo_key', $storeId);
+		$autoCapture		= $this->getConfigData('auto_capture', $storeId);
 		$environment 		= $this->getConfigData('environment', $storeId);
 		$sslFile	 		= $this->getConfigData('ssl_file', $storeId);
 		
@@ -105,7 +132,7 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 			'ccType'			=> $ccType,
 			'cieloNumber'		=> $cieloNumber,
 			'cieloKey'			=> $cieloKey,
-			'capture'			=> 'true',
+			'capture'			=> ($autoCapture == 1) ? 'true' : 'false',
 			'autorize'			=> '1',
 			'clientOrderNumber'	=> $payment->getId(),
 			'clientOrderValue'	=> $value,

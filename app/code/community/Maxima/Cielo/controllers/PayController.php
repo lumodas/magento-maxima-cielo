@@ -25,6 +25,7 @@
 			// pega o pedido armazenado
 			$webServiceOrder = Mage::getSingleton('core/session')->getData('cielo-transaction');
 			Mage::getSingleton('core/session')->unsetData('cielo-transaction');
+			$autoCapture = Mage::getStoreConfig('payment/Maxima_Cielo_Cc/auto_capture');
 			
 			$this->loadLayout();
 			$block = $this->getLayout()->getBlock('Maxima_Cielo.success');
@@ -34,6 +35,8 @@
 			$block->setCieloTid($webServiceOrder->tid);
 			$payment->setAdditionalInformation('Cielo_tid', $block->getCieloTid());
 			$payment->setAdditionalInformation('Cielo_status', $block->getCieloStatus());
+			$payment->setAdditionalInformation('Cielo_cardType', $webServiceOrder->ccType);
+			$payment->setAdditionalInformation('Cielo_installments', $webServiceOrder->paymentParcels);
 			$payment->save();
 			
 			// possiveis status 
@@ -52,16 +55,22 @@
 			// tudo ok, transacao aprovada, salva no banco
 			if($block->getCieloStatus() == 6)
 			{
-				if($order->canInvoice() && !$order->hasInvoices())
+				// se jah foi capturado e nao era pra ter sido, tem algo de errado
+				if(!$autoCapture)
 				{
-					$invoiceId = Mage::getModel('sales/order_invoice_api')->create($order->getIncrementId(), array());
-					$invoice = Mage::getModel('sales/order_invoice')->loadByIncrementId($invoiceId);
+					Mage::log("[Cielo] Pedido foi capturado, enquanto o flag indicava que nao deveria ter sido.");
+				}
+				else
+				{
+					if($order->canInvoice() && !$order->hasInvoices())
+					{
+						$invoiceId = Mage::getModel('sales/order_invoice_api')->create($order->getIncrementId(), array());
+						$invoice = Mage::getModel('sales/order_invoice')->loadByIncrementId($invoiceId);
+					}
 				}
 			}
 			// ainda em processo de autenticacao, nao faz nada... aguardar
-			else if($block->getCieloStatus() == 10) { }
-			// por algum motivo foi cancelada, deve tentar denovo
-			else if($block->getCieloStatus() == 0)
+			else if($block->getCieloStatus() == 10)
 			{
 				
 			}

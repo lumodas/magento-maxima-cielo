@@ -1,56 +1,50 @@
+<br />
 <fieldset class="form-list">
 	<ul id="payment_form_Maxima_Cielo_Cc" style="display:none;">
+
+<?php
+	
+	$cardsData = $this->getAllowedCards();
+	
+	$size = count($cardsData);
+	
+	for($i = 0; $i < $size; $i++)
+	{
+		$value = $cardsData[$i]['value'];
+		$label = $cardsData[$i]['label'];
+		$img = $this->getSkinUrl() . "images/cielo/" . $cardsData[$i]['image'];
+		
+		// abre agrupamento de bandeiras
+		if($i % 3 == 0)
+		{
+?>
 		<li class="first">
-			<br>
-			<ul class="card-logo">
-
-				<li style="width: 30%; float: left;">
-					<label for="card-VI"><img src="<?php echo $this->getSkinUrl(); ?>images/cielo/Visa.png" title="Visa"><br>
-						<input name="payment[cc_type]" type="radio" value="visa" id="cielo_cc_type" class="validate-one-required-by-name">
-					</label>
-				</li>
-
-				<li style="width: 30%; float: left;">
-					<label for="card-MC"><img src="<?php echo $this->getSkinUrl(); ?>images/cielo/Master.png" title="Mastercard"><br>
-						<input name="payment[cc_type]" type="radio" value="mastercard" id="cielo_cc_type" class="validate-one-required-by-name">
-					</label>
-				</li>
-
-				<li style="width: 30%; float: left;">
-					<label for="card-DN"><img src="<?php echo $this->getSkinUrl(); ?>images/cielo/Diners.png" title="Diners Club"><br>
-						<input name="payment[cc_type]" type="radio" value="diners" id="cielo_cc_type" class="validate-one-required-by-name">
-					</label>
-				</li>
-				
-			</ul>
+		<ul class="card-logo">
+<?php
+		}
+		
+		// bandeira em questao
+?>
+			<li style="width: 30%; float: left;">
+				<label for="card-<?php echo $value; ?>"><img src="<?php echo $img; ?>" title="<?php echo $label; ?>"><br>
+					<input name="payment[cc_type]" type="radio" value="<?php echo $value; ?>" id="card-<?php echo $value; ?>" class="validate-one-required-by-name" />
+				</label>
+			</li>
+<?php
+		// fecha agrupamento de bandeiras
+		if(($i == $size - 1) || ($i + 1 % 3 == 0))
+		{
+?>
 		</li>
-
-		<li class="first">
-			<ul class="card-logo">
-				
-				<li style="width: 30%; float: left;">
-					<label for="card-DN"><img src="<?php echo $this->getSkinUrl(); ?>images/cielo/Discover.png" title="Discover"><br>
-						<input name="payment[cc_type]" type="radio" value="discover" id="cielo_cc_type" class="validate-one-required-by-name">
-					</label>
-				</li>
-				
-				<li style="width: 30%; float: left;">
-					<label for="card-EL"><img src="<?php echo $this->getSkinUrl(); ?>images/cielo/Elo.png" title="Elo"><br>
-						<input name="payment[cc_type]" type="radio" value="elo" id="cielo_cc_type" class="validate-one-required-by-name">
-					</label>
-				</li>
-				
-				<li style="width: 30%; float: left;">
-					<label for="card-AM"><img src="<?php echo $this->getSkinUrl(); ?>images/cielo/Amex.png" title="American Express"><br>
-						<input name="payment[cc_type]" type="radio" value="amex" id="cielo_cc_type" class="validate-one-required-by-name">
-					</label>
-				</li>
-
-			</ul>
-		</li>
-
+		</ul>
+<?php
+		}
+	}	
+?>
+		
 		<li>
-			<label for="Maxima_Cielo_parcelas"><?php echo $this->__('Parcelas') ?> </label><br />
+			<br />
+			<label for="Maxima_Cielo_parcelas"><?php echo $this->__('Installments') ?> </label><br />
 			<div class="input-box">
 				<select id="Maxima_Cielo_parcelas" name="payment[parcels_number]">
 					<?php foreach($this->getInstallments() as $parcel): ?>
@@ -59,6 +53,6 @@
 				</select>
 			</div>
 		</li>
-		<br />
 	</ul>
 </fieldset>
+<br />
