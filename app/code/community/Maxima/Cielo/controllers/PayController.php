@@ -1,6 +1,6 @@
 <?php
 	class Maxima_Cielo_PayController extends Mage_Core_Controller_Front_Action
-	{        
+	{
 		/**
 		 * 
 		 * Funcao responsavel por tratar o retorno da pagina de pagamento da Cielo.
@@ -117,5 +117,31 @@
 			
 			$this->renderLayout();
 		}
+	
+	
+		/**
+		 * 
+		 * Funcao responsavel por consultar o status de uma transacao no WebService da 
+		 * Cielo
+		 * 
+		 */
+	
+		public function consultAction()
+		{
+			// pega os dados para requisicao e realiza a consulta
+			$cieloNumber 		= Mage::getStoreConfig('payment/Maxima_Cielo_Cc/cielo_number');
+			$cieloKey 			= Mage::getStoreConfig('payment/Maxima_Cielo_Cc/cielo_key');
+			
+			$model = Mage::getModel('Maxima_Cielo/webServiceOrder');
+			
+			$model->tid = $this->getRequest()->getParam('tid');
+			$model->cieloNumber = $cieloNumber;
+			$model->cieloKey = $cieloKey;
+			
+			$model->requestConsultation();
+			$xml = $model->getXmlResponse();
+			
+			$this->getResponse()->setBody(htmlentities($xml->asXML()));
+		}
+	
 	}
-?>
