@@ -12,5 +12,3 @@ class Maxima_Cielo_Model_Order_Invoice_Interest extends Mage_Sales_Model_Order_I
 		return $this;
 	}
 }
-
-?>
