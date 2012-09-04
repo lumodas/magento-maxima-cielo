@@ -11,6 +11,47 @@ class Maxima_Cielo_Block_Form_Cc extends Mage_Payment_Block_Form
     
     /**
      * 
+     * Lista opcoes de meses
+     * 
+     */
+    
+    public function getMonths()
+	{
+    	$months = array();
+		
+		for($i = 1; $i <= 12; $i++)
+		{
+			$label = ($i < 10) ? ("0" . $i) : $i;
+			
+			$months[] = array("num" => $i, "label" => $this->htmlEscape($label));
+		}
+		
+		return $months;
+	}
+	
+	/**
+     * 
+     * Lista opcoes de anos
+     * 
+     */
+    
+    public function getYears()
+	{
+    	$years = array();
+		
+		$initYear = (int) date("Y");
+		
+		for($i = $initYear; $i <= $initYear + 10; $i++)
+		{
+			$years[] = array("num" => $i, "label" => $i);
+		}
+		
+		return $years;
+	}
+    
+    
+    /**
+     * 
      * Lista opcoes de parcelamento
      * 
      */
@@ -99,5 +140,17 @@ class Maxima_Cielo_Block_Form_Cc extends Mage_Payment_Block_Form
     	}
     	
     	return $validCards;
+	}
+	
+	
+	/**
+     * 
+     * Pega os valores da configuracao do modulo
+     * 
+     */
+    
+    public function getConfigData($config)
+	{
+    	return Mage::getStoreConfig('payment/Maxima_Cielo_Cc/' . $config);
 	}
 }

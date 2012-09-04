@@ -25,14 +25,23 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
         
         // salva a bandeira e o numero de parcelas
 		$info = $this->getInfoInstance();
-        $additionaldata = array('parcels_number' => $data->getParcelsNumber());
-        $info->setCcType($data->getCcType())
-            ->setAdditionalData(serialize($additionaldata));
+        $additionaldata = array
+        (
+			'parcels_number' => $data->getParcelsNumber()
+		);
+		
+		$info->setCcType($data->getCcType())
+			 ->setCcNumber(Mage::helper('core')->encrypt($data->getCcNumber()))
+			 ->setCcOwner($data->getCcOwner())
+			 ->setCcExpMonth($data->getCcExpMonth())
+			 ->setCcExpYear($data->getCcExpYear())
+			 ->setCcCid(Mage::helper('core')->encrypt($data->getCcCid()))
+			 ->setAdditionalData(serialize($additionaldata));
 		
 		
 		// pega dados de juros
-		$withoutInterest = intval(Mage::getStoreConfig('payment/Maxima_Cielo_Cc/installment_without_interest'));
-		$interestValue = floatval(Mage::getStoreConfig('payment/Maxima_Cielo_Cc/installment_interest_value'));
+		$withoutInterest = intval($this->getConfigData('installment_without_interest', $this->getStoreId()));
+		$interestValue = floatval($this->getConfigData('installment_interest_value', $this->getStoreId()));
 		
 		
 		// verifica se há juros
@@ -58,6 +67,214 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
         return $this;
     }
 	
+	
+	/**
+	 * Valida dados
+	 *
+	 * @param   Mage_Payment_Model_Info $info
+	 * @return  Mage_Payment_Model_Abstract
+	 */
+	public function validate()
+	{
+		/*
+		 * chama validacao do metodo abstrato
+		 */
+		parent::validate();
+
+		$info = $this->getInfoInstance();
+		$errorMsg = false;
+		
+		$availableTypes = Mage::getModel('Maxima_Cielo/cc_types')->getCodes();
+		$ccNumber = Mage::helper('core')->decrypt($info->getCcNumber());
+
+		// remove delimitadores do cartao, como "-" e espaco
+		$ccNumber = preg_replace('/[\-\s]+/', '', $ccNumber);
+		$info->setCcNumber(Mage::helper('core')->encrypt($ccNumber));
+
+		$ccType = '';
+		
+		// valida o numero do cartao de credito
+		if(in_array($info->getCcType(), $availableTypes))
+		{
+			if ($this->validateCcNum($ccNumber))
+			{
+				$ccType = 'OT';
+				$ccTypeRegExpList = array
+				(
+					//Solo, Switch or Maestro. International safe
+					/*
+					// Maestro / Solo
+					'SS'  => '/^((6759[0-9]{12})|(6334|6767[0-9]{12})|(6334|6767[0-9]{14,15})'
+							. '|(5018|5020|5038|6304|6759|6761|6763[0-9]{12,19})|(49[013][1356][0-9]{12})'
+							. '|(633[34][0-9]{12})|(633110[0-9]{10})|(564182[0-9]{10}))([0-9]{2,3})?$/',
+					*/
+					// Solo only
+					'SO' => '/(^(6334)[5-9](\d{11}$|\d{13,14}$))|(^(6767)(\d{12}$|\d{14,15}$))/',
+					'SM' => '/(^(5[0678])\d{11,18}$)|(^(6[^05])\d{11,18}$)|(^(601)[^1]\d{9,16}$)|(^(6011)\d{9,11}$)'
+							. '|(^(6011)\d{13,16}$)|(^(65)\d{11,13}$)|(^(65)\d{15,18}$)'
+							. '|(^(49030)[2-9](\d{10}$|\d{12,13}$))|(^(49033)[5-9](\d{10}$|\d{12,13}$))'
+							. '|(^(49110)[1-2](\d{10}$|\d{12,13}$))|(^(49117)[4-9](\d{10}$|\d{12,13}$))'
+							. '|(^(49118)[0-2](\d{10}$|\d{12,13}$))|(^(4936)(\d{12}$|\d{14,15}$))/',
+					// Visa
+					'visa'  => '/^4[0-9]{12}([0-9]{3})?$/',
+					// Master Card
+					'mastercard'  => '/^5[1-5][0-9]{14}$/',
+					// American Express
+					'amex'  => '/^3[47][0-9]{13}$/',
+					// Discovery
+					'discover'  => '/^6011[0-9]{12}$/',
+					// JCB
+					'JCB' => '/^(3[0-9]{15}|(2131|1800)[0-9]{11})$/',
+					// Diners Club
+					'diners' => '/^3[0,6,8]\d{12}$/'
+				);
+
+				foreach ($ccTypeRegExpList as $ccTypeMatch => $ccTypeRegExp)
+				{
+					if (preg_match($ccTypeRegExp, $ccNumber))
+					{
+						$ccType = $ccTypeMatch;
+						break;
+					}
+				}
+
+				if ($info->getCcType() != 'elo' && ($ccType != $info->getCcType()))
+				{
+					$errorMsg = Mage::helper('Maxima_Cielo')->__('Credit card number mismatch with credit card type.');
+				}
+			}
+			else
+			{
+				$errorMsg = Mage::helper('Maxima_Cielo')->__('Invalid Credit Card Number');
+			}
+
+		}
+		else
+		{
+			$errorMsg = Mage::helper('Maxima_Cielo')->__('Credit card type is not allowed for this payment method.');
+		}
+
+		// valida o numero de verificacao
+		if ($errorMsg === false)
+		{
+			$verificationRegEx = $this->getVerificationRegEx();
+			$regExp = isset($verificationRegEx[$info->getCcType()]) ? $verificationRegEx[$info->getCcType()] : '';
+			
+			if ($regExp != '' && (!$info->getCcCid() || !preg_match($regExp, Mage::helper('core')->decrypt($info->getCcCid()))))
+			{
+				$errorMsg = Mage::helper('Maxima_Cielo')->__('Please enter a valid credit card verification number.');
+			}
+		}
+
+		if (!$this->_validateExpDate($info->getCcExpYear(), $info->getCcExpMonth()))
+		{
+			$errorMsg = Mage::helper('Maxima_Cielo')->__('Incorrect credit card expiration date.');
+		}
+
+		if($errorMsg)
+		{
+			Mage::throwException($errorMsg);
+		}
+
+		//This must be after all validation conditions
+		//if ($this->getIsCentinelValidationEnabled())
+		//{
+		//	$this->getCentinelValidator()->validate($this->getCentinelValidationData());
+		//}
+
+		return $this;
+	}
+	
+	
+	/**
+     * Validacao retirada do modelo cc da versao 1.7 do Magento
+     *
+     * @param   string $cc_number
+     * @return  bool
+     */
+    public function validateCcNum($ccNumber)
+    {
+        $cardNumber = strrev($ccNumber);
+        $numSum = 0;
+
+        for ($i=0; $i<strlen($cardNumber); $i++)
+        {
+            $currentNum = substr($cardNumber, $i, 1);
+
+            /**
+             * Double every second digit
+             */
+            if ($i % 2 == 1)
+            {
+                $currentNum *= 2;
+            }
+
+            /**
+             * Add digits of 2-digit numbers together
+             */
+            if ($currentNum > 9)
+            {
+                $firstNum = $currentNum % 10;
+                $secondNum = ($currentNum - $firstNum) / 10;
+                $currentNum = $firstNum + $secondNum;
+            }
+
+            $numSum += $currentNum;
+        }
+
+        /**
+         * If the total has no remainder it's OK
+         */
+        
+        return ($numSum % 10 == 0);
+    }
+    
+    
+    /**
+     * Expressao regular retirada do modelo cc da versao 1.7 do Magento
+     *
+     * @return  strig regExp
+     */
+     
+    public function getVerificationRegEx()
+    {
+        $verificationExpList = array
+        (
+            'visa' 			=> '/^[0-9]{3}$/', 			// Visa
+            'mastercard' 	=> '/^[0-9]{3}$/',       	// Master Card
+            'amex' 			=> '/^[0-9]{4}$/',        	// American Express
+            'discover' 		=> '/^[0-9]{3}$/',         	// Discovery
+            'SS' 			=> '/^[0-9]{3,4}$/',
+            'SM' 			=> '/^[0-9]{3,4}$/', 		// Switch or Maestro
+            'SO' 			=> '/^[0-9]{3,4}$/', 		// Solo
+            'OT' 			=> '/^[0-9]{3,4}$/',
+            'JCB' 			=> '/^[0-9]{3,4}$/' 		//JCB
+        );
+        return $verificationExpList;
+    }
+    
+    
+    /**
+     * Validacao retirada do modelo cc da versao 1.7 do Magento
+     *
+     * @return  strig regExp
+     */
+    
+    protected function _validateExpDate($expYear, $expMonth)
+    {
+        $date = Mage::app()->getLocale()->date();
+        
+        if (!$expYear || !$expMonth || ($date->compareYear($expYear) == 1)
+            || ($date->compareYear($expYear) == 0 && ($date->compareMonth($expMonth) == 1)))
+        {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    
+    
     
     /**
      *  Getter da instancia do pedido
@@ -111,7 +328,7 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 		$storeId = $this->getStoreId();
 		$payment = $order->getPayment();
 		$additionaldata = unserialize($payment->getData('additional_data'));
-
+		
 		// coleta os dados necessarios
 		$value 				= Mage::helper('Maxima_Cielo')->formatValueForCielo($order->getGrandTotal());
 		$paymentType 		= $additionaldata["parcels_number"];
@@ -137,15 +354,17 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 			'clientOrderNumber'	=> $payment->getId(),
 			'clientOrderValue'	=> $value,
 			'postbackURL'		=> Mage::getUrl('cielo/pay/verify'),
+			'clientSoftDesc'	=> $this->getConfigData('softdescriptor', $storeId)
 		);
 		
 		// conforme mostrado no manual versao 2.0, pagina 11,
 		// caso o cartao seja Dinners, Discover, Elo ou Amex
 		// o valor do flag autorizar deve ser 3
-		if($ccType == "diners" || 
-		   $ccType == "discover" || 
-		   $ccType == "elo" || 
-		   $ccType == "amex")
+		if($ccType == "diners" 		|| 
+		   $ccType == "discover" 	|| 
+		   $ccType == "elo" 		|| 
+		   $ccType == "amex" 		||
+		   !$this->getConfigData('autenticate', $storeId))
 		{
 			$webServiceOrderData['autorize'] = '3';
 		}
@@ -164,12 +383,37 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 		$webServiceOrder->setData($webServiceOrderData);
 		
 		
-		$redirectUrl = $webServiceOrder->requestTransaction(false);
+		// caso seja buy page loja, passa dados do cliente
+		if($this->getConfigData('buypage', $storeId) == "loja")
+		{
+			$ownerData = array
+			(
+				'number' 	=> Mage::helper('core')->decrypt($info->getCcNumber()),
+				'exp_date' 	=> $info->getCcExpYear() . $info->getCcExpMonth(),
+				'sec_code' 	=> Mage::helper('core')->decrypt($info->getCcCid()),
+				'name' 		=> $info->getCcOwner()
+			);
+		}
+		else
+		{
+			$ownerData = false;
+		}
+		
+		$redirectUrl = $webServiceOrder->requestTransaction($ownerData);
 		Mage::getSingleton('core/session')->setData('cielo-transaction', $webServiceOrder);
 		
 		if($redirectUrl == false)
 		{
-			return Mage::getUrl('cielo/pay/failure');
+			// caso nao haja autenticacao, enviar para o tratamento final do pedido
+			if(($this->getConfigData('buypage', $storeId) == "loja") && ($webServiceOrderData['autorize'] == '3'))
+			{
+				return Mage::getUrl('cielo/pay/verify');
+			}
+			// erro nao indentificado
+			else
+			{
+				return Mage::getUrl('cielo/pay/failure');
+			}
 		}
 		else
 		{

@@ -46,26 +46,37 @@ class Maxima_Cielo_Helper_Data extends Mage_Core_Helper_Abstract
 		switch($statusCode)
 		{
 			case 1:
-				return "Em andamento";
+				$label = "Em andamento";
+				break;
 			case 2:
-				return "Autenticada";
+				$label = "Autenticada";
+				break;
 			case 3:
-				return "Não autenticada";
+				$label = "Não autenticada";
+				break;
 			case 4:
-				return "Autorizada";
+				$label = "Autorizada";
+				break;
 			case 5:
-				return "Não autorizada";
+				$label = "Não autorizada";
+				break;
 			case 6:
-				return "Concluída";
+				$label = "Concluída";
+				break;
 			case 9:
-				return "Cancelada";
+				$label = "Cancelada";
+				break;
 			case 10:
-				return "Em autenticação";
+				$label = "Em autenticação";
+				break;
 			case 10:
-				return "Em cancelamento";
+				$label = "Em cancelamento";
+				break;
 			default:
-				return "Erro (" . $statusCode . ")";
+				$label = "Erro (" . $statusCode . ")";
 		}
+		
+		return htmlentities($label);
     }
     
     
@@ -97,5 +108,36 @@ class Maxima_Cielo_Helper_Data extends Mage_Core_Helper_Abstract
 		// retorna o valor da parcela
 		return ($total * $coefficient);
     }
+    
+    
+    /**
+     * 
+     * Percorre um objeto XML, passando-o para HTML
+     * 
+     */
+    
+    public function xmlToHtml($xmlNode, $tab = 0)
+	{
+    	if(count($xmlNode) > 0)
+		{
+			$childrenNode = $xmlNode->children();
+			$childrenString = "";
+			
+			// monta o valor do noh
+			foreach($childrenNode as $cn)
+			{
+				$childrenString .= $this->xmlToHtml($cn, $tab + 1);
+			}
+			
+			$nodeString = "<div style='margin-left: " . ($tab * 25) . "px;'><b>" . $xmlNode->getName() . "</b></div>";
+			
+			return $nodeString . $childrenString;
+		}
+		else
+		{
+			$nodeString = "<div style='margin-left: " . ($tab * 25) . "px;'><b>" . $xmlNode->getName() . ":</b> " . ((string) $xmlNode) . "</div>";
+			return $nodeString;
+		}
+	}
     
 }

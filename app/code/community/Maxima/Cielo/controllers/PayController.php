@@ -31,12 +31,17 @@
 			$block = $this->getLayout()->getBlock('Maxima_Cielo.success');
 			
 			// realiza consulta ao status do pagamento
-			$block->setCieloStatus($webServiceOrder->requestConsultation());
+			$status = $webServiceOrder->requestConsultation();
+			$xml = $webServiceOrder->getXmlResponse();
+			$eci = (isset($xml->autenticacao->eci)) ? ((string) $xml->autenticacao->eci) : "";
+			
+			$block->setCieloStatus($status);
 			$block->setCieloTid($webServiceOrder->tid);
-			$payment->setAdditionalInformation('Cielo_tid', $block->getCieloTid());
-			$payment->setAdditionalInformation('Cielo_status', $block->getCieloStatus());
+			$payment->setAdditionalInformation('Cielo_tid', $webServiceOrder->tid);
+			$payment->setAdditionalInformation('Cielo_status', $status);
 			$payment->setAdditionalInformation('Cielo_cardType', $webServiceOrder->ccType);
 			$payment->setAdditionalInformation('Cielo_installments', $webServiceOrder->paymentParcels);
+			$payment->setAdditionalInformation('Cielo_eci', $eci);
 			$payment->save();
 			
 			// possiveis status 
@@ -117,31 +122,4 @@
 			
 			$this->renderLayout();
 		}
-	
-	
-		/**
-		 * 
-		 * Funcao responsavel por consultar o status de uma transacao no WebService da 
-		 * Cielo
-		 * 
-		 */
-	
-		public function consultAction()
-		{
-			// pega os dados para requisicao e realiza a consulta
-			$cieloNumber 		= Mage::getStoreConfig('payment/Maxima_Cielo_Cc/cielo_number');
-			$cieloKey 			= Mage::getStoreConfig('payment/Maxima_Cielo_Cc/cielo_key');
-			
-			$model = Mage::getModel('Maxima_Cielo/webServiceOrder');
-			
-			$model->tid = $this->getRequest()->getParam('tid');
-			$model->cieloNumber = $cieloNumber;
-			$model->cieloKey = $cieloKey;
-			
-			$model->requestConsultation();
-			$xml = $model->getXmlResponse();
-			
-			$this->getResponse()->setBody(htmlentities($xml->asXML()));
-		}
-	
 	}
