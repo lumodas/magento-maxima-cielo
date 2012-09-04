@@ -68,5 +68,22 @@ class Maxima_Cielo_Model_Cc_Types
             'amex' 					=> Mage::helper('adminhtml')->__('American Express'),
         );
     }
-
+	
+	/**
+     * Formato chave
+     *
+     * @return array
+     */
+    public function getCodes()
+    {
+        return array
+		(
+            'visa',
+            'mastercard',
+            'diners',
+            'discover',
+            'elo',
+            'amex'
+        );
+    }
 }

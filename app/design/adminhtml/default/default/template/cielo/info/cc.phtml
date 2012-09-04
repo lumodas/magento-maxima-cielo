@@ -30,6 +30,7 @@ Cartão de Crédito Cielo
 				$html .= "<b>Parcelamento</b>: " . $installments . "<br /><br />";
 				
 				$html .= "<a href=\"javascript: loadCieloWebServiceData('" . $tid . "');\">Consulta WebService</a><br /><br />";
+				$html .= "<a href=\"javascript: captureCieloOrder('" . $tid . "', " . $_info->getOrder()->getId() . ");\">Capturar Pedido</a><br /><br />";
 				
 				echo $html;
 			}
@@ -40,9 +41,25 @@ Cartão de Crédito Cielo
 <script type="text/javascript">// <![CDATA[
 	
 	
+	function captureCieloOrder(tid, orderId)
+	{
+		var url = '<?php echo $this->getUrl('cielo/admin/capture') ?>';
+		
+		new Ajax.Request(url,
+		{
+			method		: 'post',
+			parameters	: "tid=" + tid + "&order=" + orderId,
+			onComplete	: function(transport)
+			{
+				maximaModalWindow("Captura de Dados", transport.responseText, 600, 400);
+			}
+		});
+	}
+	
+	
 	function loadCieloWebServiceData(tid)
 	{
-		var url = '<?php echo $this->getUrl('cielo/pay/consult') ?>';
+		var url = '<?php echo $this->getUrl('cielo/admin/consult') ?>';
 		
 		new Ajax.Request(url,
 		{
@@ -83,7 +100,7 @@ Cartão de Crédito Cielo
 			'position'				: 'absolute',
 			'zIndex'				: '9000',
 			'backgroundColor'		: '#333333',
-			'top'					: '0',
+			'top'					: viewport.getScrollOffsets()[1] + 'px',
 			'left'					: '0',
 			'display'				: 'none'
 		});

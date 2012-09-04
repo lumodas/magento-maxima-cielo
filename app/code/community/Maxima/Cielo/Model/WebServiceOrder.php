@@ -12,6 +12,7 @@
 		public $clientOrderDate;					// data da operacao
 		public $clientOrderDescription;				// descricao
 		public $clientOrderLocale = "PT";			// idioma
+		public $clientSoftDesc;						// identificador que aparece na fatura do cliente
 		
 		public $cieloNumber;						// identificador da loja na cielo
 		public $cieloKey;							// chave da loja a cielo
@@ -83,13 +84,13 @@
 		 * 
 		 */
 		
-		public function requestTransaction($ownerIncluded)
+		public function requestTransaction($ownerData)
 		{
 			$msg  = $this->_getXMLHeader() . "\n";
 			
 			$msg .= '<requisicao-transacao id="' . md5(date("YmdHisu")) . '" versao="' . self::VERSION . '">' . "\n   ";
 			$msg .= $this->_getXMLCieloData() . "\n   ";
-			$msg .= $this->_getXMLOwnerData($ownerIncluded) . "\n   ";
+			$msg .= $this->_getXMLOwnerData($ownerData) . "\n   ";
 			$msg .= $this->_getXMLOrderData() . "\n   ";
 			$msg .= $this->_getXMLPaymentData() . "\n   ";
 			$msg .= $this->_getXMLPostbackURL() . "\n   ";
@@ -103,9 +104,10 @@
 			{
 				if($this->_sendRequest("mensagem=" . $msg, "Transacao"))
 				{
+					Mage::log($this->_xmlResponse);
+					
 					if($this->_hasConsultationError())
 					{
-						Mage::log($this->_transactionError);
 						return false;
 					}
 					
@@ -155,6 +157,54 @@
 				{
 					if($this->_hasConsultationError())
 					{
+						return false;
+					}
+					
+					$xml = simplexml_load_string($this->_xmlResponse);
+					$this->status = (string) $xml->status;
+					
+					return $this->status;
+				}
+				
+				$maxAttempts--;
+			}
+			
+			if($maxAttempts == 0)
+			{
+				Mage::log("[CIELO] Não conseguiu consultar o servidor.");
+			}
+			
+			return false;
+		}
+		
+		
+		
+		/**
+		 *
+		 * funcao responsavel por montar o xml de requisicao e 
+		 * realizar a consulta do status da transacao
+		 * 
+		 * @return boolean | string
+		 * 
+		 */
+		 
+		public function requestCapture($value)
+		{
+			$msg  = $this->_getXMLHeader() . "\n";
+			$msg .= '<requisicao-captura id="' . md5(date("YmdHisu")) . '" versao="' . self::VERSION . '">' . "\n   ";
+			$msg .= '<tid>' . $this->tid . '</tid>' . "\n   ";
+			$msg .= $this->_getXMLCieloData() . "\n   ";
+			$msg .= '<valor>' . $value . '</valor>' . "\n   ";
+			$msg .= '</requisicao-captura>';
+			
+			$maxAttempts = 3;
+			
+			while($maxAttempts > 0)
+			{
+				if($this->_sendRequest("mensagem=" . $msg, "Captura"))
+				{
+					if($this->_hasConsultationError())
+					{
 						Mage::log($this->_transactionError);
 						return false;
 					}
@@ -175,6 +225,8 @@
 			
 			return false;
 		}
+		
+		
 		
 		/**
 		 *
@@ -264,8 +316,7 @@
 			curl_close($curl_session);
 			
 			return true;
-		}
-		
+		}		
 		
 		/**
 		 *
@@ -314,39 +365,33 @@
 			return $msg;
 		}
 		
-		private function _getXMLOwnerData($ownerIncluded)
+		private function _getXMLOwnerData($ownerData)
 		{
-			return "";
+			if(!$ownerData)
+			{
+				return "";
+			}
 			
-			/*
-			if(!$ownerIncluded)		return "";
 			
 			$msg = '<dados-portador>' . "\n      " . 
 						'<numero>' 
-							. $this->dadosPortadorNumero .
+							. $ownerData['number'] .
 						'</numero>' . "\n      " .
 						'<validade>'
-							. $this->dadosPortadorVal .
+							. $ownerData['exp_date'] .
 						'</validade>' . "\n      " .
 						'<indicador>'
-							. $this->dadosPortadorInd .
+							. "1" .
 						'</indicador>' . "\n      " .
 						'<codigo-seguranca>'
-							. $this->dadosPortadorCodSeg .
-						'</codigo-seguranca>' . "\n   ";
-			
-			// Verifica se Nome do Portador foi informado
-			if($this->dadosPortadorNome != null && $this->dadosPortadorNome != "")
-			{
-				$msg .= '   <nome-portador>'
-							. $this->dadosPortadorNome .
-						'</nome-portador>' . "\n   " ;
-			}
-			
-			$msg .= '</dados-portador>';
+							. $ownerData['sec_code'] .
+						'</codigo-seguranca>' . "\n      " . 
+						'<nome-portador>'
+							. $ownerData['name'] .
+						'</nome-portador>' . "\n   " .
+					'</dados-portador>';
 			
 			return $msg;
-			*/
 		}
 		
 		private function _getXMLOrderData()
@@ -376,8 +421,16 @@
 			
 			$msg .= '<idioma>'
 						. $this->clientOrderLocale .
-					'</idioma>' . "\n   " .
-					'</dados-pedido>';
+					'</idioma>' . "\n      ";
+			
+			if($this->clientSoftDesc != null && $this->clientSoftDesc != "")
+			{
+				'<softDescriptor>'
+					. $this->clientSoftDesc .
+				'</softDescriptor>' . "\n   ";
+			}
+			
+			$msg .= '</dados-pedido>';
 							
 			return $msg;
 		}
