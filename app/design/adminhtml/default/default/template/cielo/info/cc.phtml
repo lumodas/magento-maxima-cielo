@@ -29,9 +29,6 @@ Cartão de Crédito Cielo
 				$html .= "<b>Bandeira</b>: " . $cardType . "<br />";
 				$html .= "<b>Parcelamento</b>: " . $installments . "<br /><br />";
 				
-				$html .= "<a href=\"javascript: loadCieloWebServiceData('" . $tid . "');\">Consulta WebService</a><br /><br />";
-				$html .= "<a href=\"javascript: captureCieloOrder('" . $tid . "', " . $_info->getOrder()->getId() . ");\">Capturar Pedido</a><br /><br />";
-				
 				echo $html;
 			}
 		}

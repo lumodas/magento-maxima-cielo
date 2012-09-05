@@ -52,6 +52,7 @@
 					<rewrite>
 						<sales_order_totals>Maxima_Cielo_Block_Adminhtml_Order_Totals</sales_order_totals>
 						<sales_order_invoice_totals>Maxima_Cielo_Block_Adminhtml_Order_Invoice_Totals</sales_order_invoice_totals>
+						<sales_order_view>Maxima_Cielo_Block_Adminhtml_Order_View</sales_order_view>
 					</rewrite>
 				</adminhtml>
 			</blocks>
