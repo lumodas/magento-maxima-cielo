@@ -4,4 +4,6 @@
 
 *[configuracao Configuração]*
 
+*[vendas Vendas]*
+
 *[grupo Grupo de Discussão]*
