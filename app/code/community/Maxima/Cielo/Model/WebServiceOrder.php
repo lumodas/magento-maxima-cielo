@@ -104,8 +104,6 @@
 			{
 				if($this->_sendRequest("mensagem=" . $msg, "Transacao"))
 				{
-					Mage::log($this->_xmlResponse);
-					
 					if($this->_hasConsultationError())
 					{
 						return false;
