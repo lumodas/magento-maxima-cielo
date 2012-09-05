@@ -11,4 +11,6 @@ https://groups.google.com/group/cielo-magento
 
 = Colaboração =
 
-Gostaria aqui de deixar registrado meus agradecimentos e parabéns àqueles que compõem o grupo de colaboradores. O módulo tem melhorado muito em virtude da colaboração de todos.
+Gostaria de deixar registrado aqui meus agradecimentos e parabéns àqueles que compõem o grupo de colaboradores. O módulo tem melhorado muito em virtude da colaboração de todos.
+
+Gostaria de enaltecer também a postura da Máxima Sistemas, que apoiou o projeto desde a sua fase inicial, mostrando a postura arrojada e diferenciada da empresa.
