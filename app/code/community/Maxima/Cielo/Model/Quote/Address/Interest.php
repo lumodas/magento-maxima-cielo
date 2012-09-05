@@ -52,7 +52,7 @@ class Maxima_Cielo_Model_Quote_Address_Interest extends Mage_Sales_Model_Quote_A
             $address->addTotal(array
             (
                 'code' => $this->getCode(),
-                'title' => 'Interest',
+                'title' => Mage::helper('Maxima_Cielo')->__('Interest'),
                 'value' => $address->getInterest()
             ));
         }
