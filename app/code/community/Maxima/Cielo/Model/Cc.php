@@ -88,7 +88,10 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 		 * chama validacao do metodo abstrato
 		 */
 		parent::validate();
-
+		
+		if($this->getConfigData('buypage', $this->getStoreId()) != "loja")
+			return $this;
+		
 		$info = $this->getInfoInstance();
 		$errorMsg = false;
 		
