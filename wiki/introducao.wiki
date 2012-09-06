@@ -13,3 +13,7 @@ Atualmente a instalação é somente do modo manual (conforme descrito na seçã
 Peço que utilizem o módulo e dêem opiniões, dicas, críticas e sugestões, afim de tornarem este módulo cada vez melhor. Assim teremos uma opção aberta de qualidade para instalarmos nas nossas lojas virtuais.
 
 Fiquem a vontade para fazer modificações e também repassarem para os demais usuários. Para contatos, utilize o meu e-mail listado na área de membros deste projeto.
+
+
+<a href="https://pagseguro.uol.com.br/checkout/v2/donation.html?receiverEmail=lawsann@gmail.com&currency=BRL">
+<img src="https://p.simg.uol.com.br/out/pagseguro/i/botoes/doacoes/209x48-doar-assina.gif" alt="Doe para o projeto!" /></a>
