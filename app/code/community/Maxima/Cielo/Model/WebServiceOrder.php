@@ -106,6 +106,7 @@
 				{
 					if($this->_hasConsultationError())
 					{
+						Mage::log($this->_transactionError);
 						return false;
 					}
 					
@@ -155,6 +156,7 @@
 				{
 					if($this->_hasConsultationError())
 					{
+						Mage::log($this->_transactionError);
 						return false;
 					}
 					

@@ -225,10 +225,19 @@
 							<show_in_website>1</show_in_website>
 					  		<show_in_store>1</show_in_store>
 					    </active>
+						<buypage translate="label">
+							<label>Modality</label>
+							<frontend_type>select</frontend_type>
+							<source_model>Maxima_Cielo/adminhtml_buyPage</source_model>
+							<sort_order>20</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+					  		<show_in_store>1</show_in_store>
+					    </buypage>
 						<title translate="label">
 					  		<label>Title</label>
 					  		<frontend_type>text</frontend_type>
-					  		<sort_order>2</sort_order>
+					  		<sort_order>30</sort_order>
 					  		<show_in_default>1</show_in_default>
 					  		<show_in_website>1</show_in_website>
 					  		<show_in_store>1</show_in_store>
@@ -240,19 +249,43 @@
 							]]>
 						    </comment>
 				      	</title>
+						<softdescriptor translate="label">
+					  		<label>Soft Descriptor</label>
+					  		<frontend_type>text</frontend_type>
+					  		<sort_order>35</sort_order>
+					  		<show_in_default>1</show_in_default>
+					  		<show_in_website>1</show_in_website>
+					  		<show_in_store>1</show_in_store>
+							<comment>
+							<![CDATA[
+							<div>
+							    Nome que será mostrado na fatura do cliente (máximo de 13 caracteres)
+							</div>
+							]]>
+						    </comment>
+				      	</softdescriptor>
 						<environment translate="label">
 							<label>Environment</label>
 							<frontend_type>select</frontend_type>
 							<source_model>Maxima_Cielo/adminhtml_environment</source_model>
-							<sort_order>3</sort_order>
+							<sort_order>40</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 					  		<show_in_store>1</show_in_store>
 					    </environment>
+						<card_types translate="label">
+							<label>Card Types</label>
+							<frontend_type>multiselect</frontend_type>
+							<source_model>Maxima_Cielo/dc_types</source_model>
+							<sort_order>50</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+					  		<show_in_store>1</show_in_store>
+					    </card_types>
 						<ssl_file translate="label">
 					  		<label>SSL File</label>
 					  		<frontend_type>text</frontend_type>
-					  		<sort_order>6</sort_order>
+					  		<sort_order>60</sort_order>
 					  		<show_in_default>1</show_in_default>
 					  		<show_in_website>1</show_in_website>
 					  		<show_in_store>1</show_in_store>
@@ -268,7 +301,7 @@
 							<label>New Order Status</label>
 							<frontend_type>select</frontend_type>
 							<source_model>adminhtml/system_config_source_order_status_new</source_model>
-					  		<sort_order>7</sort_order>
+					  		<sort_order>70</sort_order>
 					  		<show_in_default>1</show_in_default>
 					  		<show_in_website>1</show_in_website>
 					  		<show_in_store>1</show_in_store>
@@ -276,7 +309,7 @@
 						<cielo_number translate="label">
 							<label>Cielo Merchant Number</label>
 					  		<frontend_type>text</frontend_type>
-					  		<sort_order>8</sort_order>
+					  		<sort_order>80</sort_order>
 					  		<show_in_default>1</show_in_default>
 					  		<show_in_website>1</show_in_website>
 					  		<show_in_store>1</show_in_store>
@@ -284,7 +317,7 @@
 						<cielo_key translate="label">
 							<label>Cielo Merchant Key</label>
 					  		<frontend_type>text</frontend_type>
-					  		<sort_order>9</sort_order>
+					  		<sort_order>90</sort_order>
 					  		<show_in_default>1</show_in_default>
 					  		<show_in_website>1</show_in_website>
 					  		<show_in_store>1</show_in_store>

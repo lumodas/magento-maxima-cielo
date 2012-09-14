@@ -1,18 +1,93 @@
 <fieldset class="form-list">
 	<ul id="payment_form_Maxima_Cielo_Dc" style="display:none;">
+		<br />
+<?php
+	
+	$cardsData = $this->getAllowedCards();
+	
+	$size = count($cardsData);
+	
+	for($i = 0; $i < $size; $i++)
+	{
+		$value = $cardsData[$i]['value'];
+		$label = $cardsData[$i]['label'];
+		$img = $this->getSkinUrl() . "images/cielo/" . $cardsData[$i]['image'];
+		
+		// abre agrupamento de bandeiras
+		if($i % 3 == 0)
+		{
+?>
 		<li class="first">
-			<br>
-			<ul class="card-logo">
-
-				<li style="width: 40%; float: left;">
-					<label for="card-VI"><img src="<?php echo $this->getSkinUrl(); ?>images/cielo/Visa-Electron.png" title="Visa Electron"><br>
-						<input name="payment[cc_type]" type="radio" value="visa" id="card-VI" class="validate-one-required-by-name">
-						Somente bradesco
-					</label>
-				</li>
-				
-			</ul>
+		<ul class="card-logo">
+<?php
+		}
+		
+		// bandeira em questao
+?>
+			<li style="width: 70px; float: left;">
+				<label for="card-<?php echo $value; ?>"><img src="<?php echo $img; ?>" style="width: 40px;" title="<?php echo $label; ?>"><br>
+					<input name="payment[cc_type]" type="radio" value="<?php echo $value; ?>" id="card-<?php echo $value; ?>" class="validate-one-required-by-name" />
+				</label>
+			</li>
+<?php
+		// fecha agrupamento de bandeiras
+		if(($i == $size - 1))
+		{
+?>
+		</ul>
 		</li>
+<?php
+		}
+	}
+	
+	// dados do cartao
+	// somente mostrado em buy page loja
+	
+	if($this->getConfigData('buypage') == "loja")
+	{
+?>
+		<li>
+			<label for="cielo-card-number" class="required"><em>*</em><?php echo $this->__('Card Number') ?></label><br />
+			<div class="input-box">
+				<input name="payment[cc_number]" type="text" value="" id="cielo-card-number" title="<?php echo $this->__('Card Number') ?>" class="input-text required-entry validate-cc-number" />
+			</div>
+		</li>
+		<li>
+			<label for="cielo-security-code" class="required"><em>*</em><?php echo $this->__('Verification Code') ?></label><br />
+			<div class="input-box">
+				<input name="payment[cc_cid]" type="text" value="" id="cielo-security-code" title="<?php echo $this->__('Verification Code') ?>" class="input-text  required-entry" style="width: 50px;" />
+			</div>
+		</li>
+		<li>
+			<label for="cielo-card_expiration-mh" class="required"><em>*</em><?php echo $this->__('Expiration Date') ?></label>
+			<div class="input-box">
+				<div class="v-fix">
+					<select id="cielo-card_expiration-mh" name="payment[cc_exp_month]" class="month required-entry" autocomplete="off">
+						<option value="" selected="selected"><?php echo $this->__('Month') ?></option>
+						<?php foreach($this->getMonths() as $month): ?>
+						<option value="<?php echo $month['num'] ?>"><?php echo $month['label'] ?></option>
+						<?php endforeach ?>
+					</select>
+				</div>
+				<div class="v-fix">
+					<select id="cielo-card_expiration-yr" name="payment[cc_exp_year]" class="year required-entry" autocomplete="off">
+						<option value="" selected="selected"><?php echo $this->__('Year') ?></option>
+						<?php foreach($this->getYears() as $year): ?>
+						<option value="<?php echo $year['num'] ?>"><?php echo $year['label'] ?></option>
+						<?php endforeach ?>
+					</select>
+				</div>
+			</div>
+			<li>
+				<label for="cielo-card_owner" class="required"><em>*</em><?php echo $this->__('Name on Card') ?></label>
+				<div class="input-box">
+					<input type="text" title="<?php echo $this->__('Name on Card') ?>" class="input-text required-entry" id="cielo-card_owner" name="payment[cc_owner]" value="" autocomplete="off">
+				</div>
+			</li>
+		</li>
+<?php
+	}
+?>
 		<br />
 	</ul>
 </fieldset>

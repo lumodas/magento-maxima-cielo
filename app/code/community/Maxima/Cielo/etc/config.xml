@@ -164,7 +164,9 @@
 				<Maxima_Cielo_Dc>
 					<model>Maxima_Cielo_Model_Dc</model>
 					<active>0</active>
+					<buypage>loja</buypage>
 					<environment>https://qasecommerce.cielo.com.br</environment>
+					<card_types>visa</card_types>
 					<ssl_file></ssl_file>
 					<title>Cartão de Débito</title>
 					<auto_capture>1</auto_capture>
