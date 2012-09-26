@@ -53,7 +53,7 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 									$interestValue / 100, 
 									$data->getParcelsNumber()
 								);
-			
+			$installmentValue = round($installmentValue, 2);
 			$interest = ($installmentValue * $data->getParcelsNumber()) - $info->getQuote()->getGrandTotal();
 			
 			$info->getQuote()->setInterest($info->getQuote()->getStore()->convertPrice($interest, false));
@@ -89,11 +89,11 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 		 */
 		parent::validate();
 		
-		if($this->getConfigData('buypage', $this->getStoreId()) != "loja")
-			return $this;
-		
 		$info = $this->getInfoInstance();
 		$errorMsg = false;
+		
+		if($this->getConfigData('buypage', $this->getStoreId()) != "loja")
+			return $this;
 		
 		$availableTypes = Mage::getModel('Maxima_Cielo/cc_types')->getCodes();
 		$ccNumber = Mage::helper('core')->decrypt($info->getCcNumber());
@@ -397,10 +397,13 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 		// caso seja buy page loja, passa dados do cliente
 		if($this->getConfigData('buypage', $storeId) == "loja")
 		{
+			$ccExpMonth = $info->getCcExpMonth();
+			$ccExpMonth = ($ccExpMonth < 10) ? ("0" . $ccExpMonth) : $ccExpMonth;
+			
 			$ownerData = array
 			(
 				'number' 	=> Mage::helper('core')->decrypt($info->getCcNumber()),
-				'exp_date' 	=> $info->getCcExpYear() . $info->getCcExpMonth(),
+				'exp_date' 	=> $info->getCcExpYear() . $ccExpMonth,
 				'sec_code' 	=> Mage::helper('core')->decrypt($info->getCcCid()),
 				'name' 		=> $info->getCcOwner()
 			);

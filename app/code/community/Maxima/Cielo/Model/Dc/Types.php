@@ -14,7 +14,7 @@ class Maxima_Cielo_Model_Dc_Types
 		(
 			array
 			(
-				'value' 	=> 'visa',
+				'value' 	=> 'visa-electron',
 				'label' 	=> Mage::helper('adminhtml')->__('Visa Electron (somente Bradesco)'),
 				'image' 	=> 'Visa-Electron.png'
 			)

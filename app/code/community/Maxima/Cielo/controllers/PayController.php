@@ -61,7 +61,7 @@
 			if($block->getCieloStatus() == 6)
 			{
 				// se jah foi capturado e nao era pra ter sido, tem algo de errado
-				if(!$autoCapture)
+				if(!$autoCapture && $payment->getMethodInstance()->getCode() == "Maxima_Cielo_Cc")
 				{
 					Mage::log("[Cielo] Pedido foi capturado, enquanto o flag indicava que nao deveria ter sido.");
 				}
@@ -71,6 +71,11 @@
 					{
 						$invoiceId = Mage::getModel('sales/order_invoice_api')->create($order->getIncrementId(), array());
 						$invoice = Mage::getModel('sales/order_invoice')->loadByIncrementId($invoiceId);
+						
+						// envia email de confirmacao de fatura
+						$invoice->sendEmail(true);
+						$invoice->setEmailSent(true);
+						$invoice->save();
 					}
 				}
 			}
@@ -83,6 +88,18 @@
 			else
 			{
 				
+			}
+			
+			// limpa juros, caso nao tenha sido zerado
+			$quote = Mage::getSingleton('checkout/session')->getQuote();
+			
+			if($quote)
+			{
+				$quote->setInterest(0.0);
+				$quote->setBaseInterest(0.0);
+			
+				$quote->setTotalsCollectedFlag(false)->collectTotals();
+				$quote->save();
 			}
 			
 			$this->renderLayout();

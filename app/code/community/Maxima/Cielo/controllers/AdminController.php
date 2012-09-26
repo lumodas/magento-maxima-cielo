@@ -19,9 +19,14 @@
 				return;
 			}
 			
+			// pega pedido correspondente
+			$orderId = $this->getRequest()->getParam('order');
+			$order = Mage::getModel('sales/order')->load($orderId);
+			
 			// pega os dados para requisicao e realiza a consulta
-			$cieloNumber 		= Mage::getStoreConfig('payment/Maxima_Cielo_Cc/cielo_number');
-			$cieloKey 			= Mage::getStoreConfig('payment/Maxima_Cielo_Cc/cielo_key');
+			$methodCode = $order->getPayment()->getMethodInstance()->getCode();
+			$cieloNumber 		= Mage::getStoreConfig('payment/' . $methodCode . '/cielo_number');
+			$cieloKey 			= Mage::getStoreConfig('payment/' . $methodCode . '/cielo_key');
 			
 			$model = Mage::getModel('Maxima_Cielo/webServiceOrder');
 			
@@ -53,6 +58,10 @@
 				return;
 			}
 			
+			// pega pedido correspondente
+			$orderId = $this->getRequest()->getParam('order');
+			$order = Mage::getModel('sales/order')->load($orderId);
+			$value = Mage::helper('Maxima_Cielo')->formatValueForCielo($order->getGrandTotal());
 			
 			// pega os dados para requisicao e realiza a consulta
 			$cieloNumber 		= Mage::getStoreConfig('payment/Maxima_Cielo_Cc/cielo_number');
@@ -64,11 +73,7 @@
 			$model->cieloNumber = $cieloNumber;
 			$model->cieloKey = $cieloKey;
 			
-			// pega pedido correspondente
-			$orderId = $this->getRequest()->getParam('order');
-			$order = Mage::getModel('sales/order')->load($orderId);
-			$value = Mage::helper('Maxima_Cielo')->formatValueForCielo($order->getGrandTotal());
-			
+			// requisita captura
 			$model->requestCapture($value);
 			$xml = $model->getXmlResponse();
 			$status = (string) $xml->status;
@@ -90,6 +95,11 @@
 				{
 					$invoiceId = Mage::getModel('sales/order_invoice_api')->create($order->getIncrementId(), array());
 					$invoice = Mage::getModel('sales/order_invoice')->loadByIncrementId($invoiceId);
+					
+					// envia email de confirmacao de fatura
+					$invoice->sendEmail(true);
+					$invoice->setEmailSent(true);
+					$invoice->save();
 				}
 			}
 			else
@@ -99,5 +109,40 @@
 			
 			$this->getResponse()->setBody($html . Mage::helper('Maxima_Cielo')->xmlToHtml($xml));
 		}
+		
+		
+		/**
+		 * 
+		 * Funcao responsavel por enviar o pedido de cancelamento para o WebService da Cielo
+		 * 
+		 */
 	
+		public function cancelAction()
+		{
+			// verifica se o usuario estah logado na administracao do magento
+			Mage::getSingleton('core/session', array('name' => 'adminhtml'));
+			$session = Mage::getSingleton('admin/session');
+			
+			if (!$session->isLoggedIn())
+			{
+				return;
+			}
+			
+			
+			// pega os dados para requisicao e realiza a consulta
+			$cieloNumber 		= Mage::getStoreConfig('payment/Maxima_Cielo_Cc/cielo_number');
+			$cieloKey 			= Mage::getStoreConfig('payment/Maxima_Cielo_Cc/cielo_key');
+			
+			$model = Mage::getModel('Maxima_Cielo/webServiceOrder');
+			
+			$model->tid = $this->getRequest()->getParam('tid');
+			$model->cieloNumber = $cieloNumber;
+			$model->cieloKey = $cieloKey;
+			
+			// requisita cancelamento
+			$model->requestCancellation();
+			$xml = $model->getXmlResponse();
+			
+			$this->getResponse()->setBody(Mage::helper('Maxima_Cielo')->xmlToHtml($xml));
+		}
 	} 

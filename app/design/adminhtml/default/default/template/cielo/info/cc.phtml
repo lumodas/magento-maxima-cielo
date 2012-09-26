@@ -54,19 +54,40 @@ Cartão de Crédito Cielo
 	}
 	
 	
-	function loadCieloWebServiceData(tid)
+	function loadCieloWebServiceData(tid, orderId)
 	{
 		var url = '<?php echo $this->getUrl('cielo/admin/consult') ?>';
 		
 		new Ajax.Request(url,
 		{
 			method		: 'post',
-			parameters	: "tid=" + tid,
+			parameters	: "tid=" + tid + "&order=" + orderId,
 			onComplete	: function(transport)
 			{
 				maximaModalWindow("Dados Cielo", transport.responseText, 600, 400);
 			}
 		});
+	}
+	
+	
+	function cancelCieloOrder(tid, orderId)
+	{
+		var cancellation = confirm("<?php echo $this->__("Do You really want to cancel this transaction on Cielo?"); ?>");
+		
+		if(cancellation)
+		{
+			var url = '<?php echo $this->getUrl('cielo/admin/cancel') ?>';
+			
+			new Ajax.Request(url,
+			{
+				method		: 'post',
+				parameters	: "tid=" + tid + "&order=" + orderId,
+				onComplete	: function(transport)
+				{
+					maximaModalWindow("Cancelamento na Cielo", transport.responseText, 600, 400);
+				}
+			});
+		}
 	}
 	
 	

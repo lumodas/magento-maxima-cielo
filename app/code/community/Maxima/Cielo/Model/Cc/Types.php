@@ -10,43 +10,63 @@ class Maxima_Cielo_Model_Cc_Types
      */
     public function toOptionArray()
     {
-        return array
+        /**
+		 * value: indice
+		 * label: descricao
+		 * image: nome da imagem
+		 * inst_s: numero maximo de parcelas para parcelamento na loja
+		 * inst_a: numero maximo de parcelas para parcelamento na administradora
+		 */
+		
+		return array
 		(
 			array
 			(
 				'value' 	=> 'visa',
 				'label' 	=> Mage::helper('adminhtml')->__('Visa'),
-				'image' 	=> 'Visa.png'
+				'image' 	=> 'Visa.png',
+				'inst_s' 	=> 12,
+				'inst_a' 	=> 1
 			),
 			array
 			(
 				'value' 	=> 'mastercard',
 				'label' 	=> Mage::helper('adminhtml')->__('Mastercard'),
-				'image' 	=> 'Master.png'
+				'image' 	=> 'Master.png',
+				'inst_s' 	=> 12,
+				'inst_a' 	=> 1
 			),
 			array
 			(
 				'value' 	=> 'diners',
 				'label' 	=> Mage::helper('adminhtml')->__('Diners Club'),
-				'image' 	=> 'Diners.png'
+				'image' 	=> 'Diners.png',
+				'inst_s' 	=> 10,
+				'inst_a' 	=> 1
 			),
 			array
 			(
 				'value' 	=> 'discover',
 				'label' 	=> Mage::helper('adminhtml')->__('Discover'),
-				'image' 	=> 'Discover.png'
+				'image' 	=> 'Discover.png',
+				'inst_s' 	=> 1,
+				'inst_a' 	=> 1
 			),
 			array
 			(
 				'value' 	=> 'elo',
 				'label' 	=> Mage::helper('adminhtml')->__('Elo'),
-				'image' 	=> 'Elo.png'
+				'image' 	=> 'Elo.png',
+				'inst_s' 	=> 12,
+				'inst_a' 	=> 1
 			),
 			array
 			(
 				'value' 	=> 'amex',
 				'label' 	=> Mage::helper('adminhtml')->__('American Express'),
-				'image' 	=> 'Amex.png'
+				'image' 	=> 'Amex.png',
+				'inst_s' 	=> 10,
+				'inst_a' 	=> 24
 			)
         );
     }

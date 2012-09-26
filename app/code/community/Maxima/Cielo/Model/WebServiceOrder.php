@@ -182,7 +182,7 @@
 		/**
 		 *
 		 * funcao responsavel por montar o xml de requisicao e 
-		 * realizar a consulta do status da transacao
+		 * realizar a captura da transacao
 		 * 
 		 * @return boolean | string
 		 * 
@@ -202,6 +202,54 @@
 			while($maxAttempts > 0)
 			{
 				if($this->_sendRequest("mensagem=" . $msg, "Captura"))
+				{
+					if($this->_hasConsultationError())
+					{
+						Mage::log($this->_transactionError);
+						return false;
+					}
+					
+					$xml = simplexml_load_string($this->_xmlResponse);
+					$this->status = (string) $xml->status;
+					
+					return $this->status;
+				}
+				
+				$maxAttempts--;
+			}
+			
+			if($maxAttempts == 0)
+			{
+				Mage::log("[CIELO] Não conseguiu consultar o servidor.");
+			}
+			
+			return false;
+		}
+		
+		
+		
+		/**
+		 *
+		 * funcao responsavel por montar o xml de requisicao e 
+		 * realizar o cancelamento da transacao
+		 * 
+		 * @return boolean | string
+		 * 
+		 */
+		 
+		public function requestCancellation()
+		{
+			$msg  = $this->_getXMLHeader() . "\n";
+			$msg .= '<requisicao-cancelamento id="' . md5(date("YmdHisu")) . '" versao="' . self::VERSION . '">' . "\n   ";
+			$msg .= '<tid>' . $this->tid . '</tid>' . "\n   ";
+			$msg .= $this->_getXMLCieloData() . "\n   ";
+			$msg .= '</requisicao-cancelamento>';
+			
+			$maxAttempts = 3;
+			
+			while($maxAttempts > 0)
+			{
+				if($this->_sendRequest("mensagem=" . $msg, "Cancelamento"))
 				{
 					if($this->_hasConsultationError())
 					{
