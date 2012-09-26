@@ -31,7 +31,17 @@ class Maxima_Cielo_Block_Adminhtml_Order_View extends Mage_Adminhtml_Block_Sales
 			$this->_addButton('maxima_cielo_consult', array
 			(
 				'label'     => Mage::helper('Maxima_Cielo')->__('Consult WebService'),
-				'onclick'   => "loadCieloWebServiceData('" . $tid . "');",
+				'onclick'   => "loadCieloWebServiceData('" . $tid . "', " . $this->getOrder()->getId() . ");",
+				'class'     => 'go'
+			));
+		}
+		
+		if($method == "Maxima_Cielo_Cc")
+		{
+			$this->_addButton('maxima_cielo_cancel', array
+			(
+				'label'     => Mage::helper('Maxima_Cielo')->__('Cancel on Cielo'),
+				'onclick'   => "cancelCieloOrder('" . $tid . "', " . $this->getOrder()->getId() . ");",
 				'class'     => 'go'
 			));
 		}

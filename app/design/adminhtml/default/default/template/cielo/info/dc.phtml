@@ -37,14 +37,14 @@ Cartão de Débito Cielo
 
 <script type="text/javascript">// <![CDATA[
 	
-	function loadCieloWebServiceData(tid)
+	function loadCieloWebServiceData(tid, orderId)
 	{
 		var url = '<?php echo $this->getUrl('cielo/admin/consult') ?>';
 		
 		new Ajax.Request(url,
 		{
 			method		: 'post',
-			parameters	: "tid=" + tid,
+			parameters	: "tid=" + tid + "&order=" + orderId,
 			onComplete	: function(transport)
 			{
 				maximaModalWindow("Dados Cielo", transport.responseText, 600, 400);

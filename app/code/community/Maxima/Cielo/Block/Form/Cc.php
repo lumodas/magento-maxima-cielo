@@ -62,6 +62,17 @@ class Maxima_Cielo_Block_Form_Cc extends Mage_Payment_Block_Form
     	$maxInstallments = intval(Mage::getStoreConfig('payment/Maxima_Cielo_Cc/max_parcels_number'));
     	$minInstallmentValue = floatval(Mage::getStoreConfig('payment/Maxima_Cielo_Cc/min_parcels_value'));
 		
+		$minInstallmentValue = ($minInstallmentValue <= 5.01) ? 5.01 : $minInstallmentValue;
+		
+		// atualiza taxa de juros para 0,
+		// caso o usuario tenha voltado na navegacao
+		$quote = Mage::getSingleton('checkout/cart')->getQuote();
+		$quote->setInterest(0.0);
+		$quote->setBaseInterest(0.0);
+		
+		$quote->setTotalsCollectedFlag(false)->collectTotals();
+		$quote->save();
+		
 		// pega dados de juros
 		$withoutInterest = intval(Mage::getStoreConfig('payment/Maxima_Cielo_Cc/installment_without_interest'));
 		$interestValue = floatval(Mage::getStoreConfig('payment/Maxima_Cielo_Cc/installment_interest_value'));
@@ -77,12 +88,12 @@ class Maxima_Cielo_Block_Form_Cc extends Mage_Payment_Block_Form
 			if($i <= $withoutInterest)
 			{
 				$orderTotal = $total;
-				$installmentValue = $orderTotal / $i;
+				$installmentValue = round($orderTotal / $i, 2);
 			}
 			// caso haja juros
 			else
 			{
-				$installmentValue = Mage::helper('Maxima_Cielo')->calcInstallmentValue($total, $interestValue / 100, $i);
+				$installmentValue = round(Mage::helper('Maxima_Cielo')->calcInstallmentValue($total, $interestValue / 100, $i), 2);
 				$orderTotal = $i * $installmentValue;
 			}
 			
@@ -115,6 +126,14 @@ class Maxima_Cielo_Block_Form_Cc extends Mage_Payment_Block_Form
 			$installments[] = array("num" => $i, "label" => $this->htmlEscape($label));
 		}
 		
+		// caso o valor da parcela minima seja maior do que o valor da compra,
+		// deixa somente opcao a vista
+		if($minInstallmentValue > $total)
+		{
+			$label = "&#192; vista (" . Mage::helper('core')->currency(($total), true, false) . ")";
+			$installments[] = array("num" => 1, "label" => $this->htmlEscape($label));
+		}
+		
 		return $installments;
 	}
 	
@@ -142,6 +161,41 @@ class Maxima_Cielo_Block_Form_Cc extends Mage_Payment_Block_Form
     	return $validCards;
 	}
 	
+	/**
+     * 
+     * Retorna vetor com numero maximo de parcelamento aceito
+	 * para cada bandeira
+     * 
+     */
+    
+    public function getMaxCardsInstallments()
+	{
+    	$maxInstallments = intval(Mage::getStoreConfig('payment/Maxima_Cielo_Cc/max_parcels_number'));
+		$installmentType = Mage::getStoreConfig('payment/Maxima_Cielo_Cc/installments_type');
+    	$allCards = Mage::getModel('Maxima_Cielo/cc_types')->toOptionArray();
+    	
+    	$installmentsArray = array();
+    	
+    	foreach($allCards as $card)
+    	{
+			$installmentsNumber = $maxInstallments;
+			
+			// caso loja
+			if($installmentType == '2')
+			{
+				$installmentsNumber = ($installmentsNumber > $card['inst_s']) ? $card['inst_s'] : $installmentsNumber;
+			}
+			// caso administradora
+			else if($installmentType == '3')
+			{
+				$installmentsNumber = ($installmentsNumber > $card['inst_a']) ? $card['inst_a'] : $installmentsNumber;
+			}
+			
+			$installmentsArray[$card['value']] = $installmentsNumber;
+    	}
+    	
+    	return $installmentsArray;
+	}
 	
 	/**
      * 

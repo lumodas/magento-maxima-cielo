@@ -26,7 +26,17 @@ class Maxima_Cielo_Model_Dc extends Mage_Payment_Model_Method_Abstract
         // salva a bandeira
 		$info = $this->getInfoInstance();
 		
-		$info->setCcType($data->getCcType())
+		// converte nomenclatura da bandeira
+		if($data->getCcType() == "visa-electron")
+		{
+			$cardType = "visa";
+		}
+		else
+		{
+			$cardType = $data->getCcType();
+		}
+		
+		$info->setCcType($cardType)
 			 ->setCcNumber(Mage::helper('core')->encrypt($data->getCcNumber()))
 			 ->setCcOwner($data->getCcOwner())
 			 ->setCcExpMonth($data->getCcExpMonth())
@@ -332,10 +342,13 @@ class Maxima_Cielo_Model_Dc extends Mage_Payment_Model_Method_Abstract
 		// caso seja buy page loja, passa dados do cliente
 		if($this->getConfigData('buypage', $storeId) == "loja")
 		{
+			$ccExpMonth = $info->getCcExpMonth();
+			$ccExpMonth = ($ccExpMonth < 10) ? ("0" . $ccExpMonth) : $ccExpMonth;
+			
 			$ownerData = array
 			(
 				'number' 	=> Mage::helper('core')->decrypt($info->getCcNumber()),
-				'exp_date' 	=> $info->getCcExpYear() . $info->getCcExpMonth(),
+				'exp_date' 	=> $info->getCcExpYear() . $ccExpMonth,
 				'sec_code' 	=> Mage::helper('core')->decrypt($info->getCcCid()),
 				'name' 		=> $info->getCcOwner()
 			);
