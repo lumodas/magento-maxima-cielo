@@ -27,8 +27,10 @@
 			$methodCode = $order->getPayment()->getMethodInstance()->getCode();
 			$cieloNumber 		= Mage::getStoreConfig('payment/' . $methodCode . '/cielo_number');
 			$cieloKey 			= Mage::getStoreConfig('payment/' . $methodCode . '/cielo_key');
+			$environment		= Mage::getStoreConfig('payment/' . $methodCode . '/environment');
+			$sslFile			= Mage::getStoreConfig('payment/' . $methodCode . '/ssl_file');
 			
-			$model = Mage::getModel('Maxima_Cielo/webServiceOrder');
+			$model = Mage::getModel('Maxima_Cielo/webServiceOrder', array('enderecoBase' => $environment, 'caminhoCertificado' => $sslFile));
 			
 			$model->tid = $this->getRequest()->getParam('tid');
 			$model->cieloNumber = $cieloNumber;
@@ -66,8 +68,10 @@
 			// pega os dados para requisicao e realiza a consulta
 			$cieloNumber 		= Mage::getStoreConfig('payment/Maxima_Cielo_Cc/cielo_number');
 			$cieloKey 			= Mage::getStoreConfig('payment/Maxima_Cielo_Cc/cielo_key');
+			$environment		= Mage::getStoreConfig('payment/' . $methodCode . '/environment');
+			$sslFile			= Mage::getStoreConfig('payment/' . $methodCode . '/ssl_file');
 			
-			$model = Mage::getModel('Maxima_Cielo/webServiceOrder');
+			$model = Mage::getModel('Maxima_Cielo/webServiceOrder', array('enderecoBase' => $environment, 'caminhoCertificado' => $sslFile));
 			
 			$model->tid = $this->getRequest()->getParam('tid');
 			$model->cieloNumber = $cieloNumber;
@@ -132,8 +136,10 @@
 			// pega os dados para requisicao e realiza a consulta
 			$cieloNumber 		= Mage::getStoreConfig('payment/Maxima_Cielo_Cc/cielo_number');
 			$cieloKey 			= Mage::getStoreConfig('payment/Maxima_Cielo_Cc/cielo_key');
+			$environment		= Mage::getStoreConfig('payment/' . $methodCode . '/environment');
+			$sslFile			= Mage::getStoreConfig('payment/' . $methodCode . '/ssl_file');
 			
-			$model = Mage::getModel('Maxima_Cielo/webServiceOrder');
+			$model = Mage::getModel('Maxima_Cielo/webServiceOrder', array('enderecoBase' => $environment, 'caminhoCertificado' => $sslFile));
 			
 			$model->tid = $this->getRequest()->getParam('tid');
 			$model->cieloNumber = $cieloNumber;
