@@ -11,7 +11,7 @@
 	{
 		$value = $cardsData[$i]['value'];
 		$label = $cardsData[$i]['label'];
-		$img = Mage::getBaseUrl() . "skin/frontend/default/default/images/cielo/" . $cardsData[$i]['image'];
+		$img = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN) . "frontend/default/default/images/cielo/" . $cardsData[$i]['image'];
 		
 		// abre agrupamento de bandeiras
 		if($i % 3 == 0)
