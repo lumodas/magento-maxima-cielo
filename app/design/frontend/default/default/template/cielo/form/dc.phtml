@@ -49,13 +49,13 @@
 		<li>
 			<label for="cielo-card-number" class="required"><em>*</em><?php echo $this->__('Card Number') ?></label><br />
 			<div class="input-box">
-				<input name="payment[cc_number]" type="text" value="" id="cielo-card-number" title="<?php echo $this->__('Card Number') ?>" class="input-text required-entry validate-cc-number" maxlength="16" />
+				<input name="payment[cc_number]" type="text" value="" id="cielo-card-number" title="<?php echo $this->__('Card Number') ?>" class="input-text required-entry validate-cc-number" maxlength="16" onkeydown="return denyNotNumber(this, event);" />
 			</div>
 		</li>
 		<li>
 			<label for="cielo-security-code" class="required"><em>*</em><?php echo $this->__('Verification Code') ?></label><br />
 			<div class="input-box">
-				<input name="payment[cc_cid]" type="text" value="" id="cielo-security-code" title="<?php echo $this->__('Verification Code') ?>" class="input-text  required-entry" style="width: 50px;" maxlength="4" />
+				<input name="payment[cc_cid]" type="text" value="" id="cielo-security-code" title="<?php echo $this->__('Verification Code') ?>" class="input-text  required-entry" style="width: 50px;" maxlength="4" onkeydown="return denyNotNumber(this, event);" />
 			</div>
 		</li>
 		<li>
@@ -91,3 +91,22 @@
 		<br />
 	</ul>
 </fieldset>
+<script type="text/javascript">// <![CDATA[
+
+	function denyNotNumber(field, event)
+	{
+        var keyCode = ('which' in event) ? event.which : event.keyCode;
+        var char = String.fromCharCode(keyCode);
+		
+		// teclas backspace e delete
+        if(keyCode == 8 || keyCode == 46)
+			return true;
+		
+		// impede caracteres nao numericos
+        if(isNaN(char))
+            return false;
+        else
+            return true;
+	}
+	
+// ]]></script>
