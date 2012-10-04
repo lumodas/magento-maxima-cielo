@@ -90,6 +90,11 @@
 				
 			}
 			
+			// envia email de nova compra
+			$order->sendNewOrderEmail();
+			$order->setEmailSent(true);
+			$order->save();
+			
 			// limpa juros, caso nao tenha sido zerado
 			$quote = Mage::getSingleton('checkout/session')->getQuote();
 			
