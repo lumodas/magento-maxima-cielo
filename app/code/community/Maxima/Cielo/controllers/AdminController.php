@@ -91,6 +91,7 @@ class Maxima_Cielo_AdminController extends Mage_Adminhtml_Controller_Action
 		$value = Mage::helper('Maxima_Cielo')->formatValueForCielo($order->getGrandTotal());
 		
 		// pega os dados para requisicao e realiza a consulta
+		$methodCode = $order->getPayment()->getMethodInstance()->getCode();
 		$cieloNumber 		= Mage::getStoreConfig('payment/Maxima_Cielo_Cc/cielo_number');
 		$cieloKey 			= Mage::getStoreConfig('payment/Maxima_Cielo_Cc/cielo_key');
 		$environment		= Mage::getStoreConfig('payment/' . $methodCode . '/environment');
@@ -157,8 +158,12 @@ class Maxima_Cielo_AdminController extends Mage_Adminhtml_Controller_Action
 			return;
 		}
 		
+		// pega pedido correspondente
+		$orderId = $this->getRequest()->getParam('order');
+		$order = Mage::getModel('sales/order')->load($orderId);
 		
 		// pega os dados para requisicao e realiza a consulta
+		$methodCode = $order->getPayment()->getMethodInstance()->getCode();
 		$cieloNumber 		= Mage::getStoreConfig('payment/Maxima_Cielo_Cc/cielo_number');
 		$cieloKey 			= Mage::getStoreConfig('payment/Maxima_Cielo_Cc/cielo_key');
 		$environment		= Mage::getStoreConfig('payment/' . $methodCode . '/environment');
@@ -173,7 +178,26 @@ class Maxima_Cielo_AdminController extends Mage_Adminhtml_Controller_Action
 		// requisita cancelamento
 		$model->requestCancellation();
 		$xml = $model->getXmlResponse();
+		$status = (string) $xml->status;
 		
-		$this->getResponse()->setBody(Mage::helper('Maxima_Cielo')->xmlToHtml($xml));
+		// tudo ok, transacao cancelada
+		if($status == 9)
+		{
+			$html = "<b>Pedido cancelado com sucesso!</b> &nbsp; &nbsp; 
+					<button type=\"button\" title=\"Atualizar Informações\" onclick=\"document.location.reload(true)\">
+						<span>Recarregar Página</span>
+					</button><br /><br />";
+			
+			// atualiza os dados da compra
+			$payment = $order->getPayment();
+			$payment->setAdditionalInformation('Cielo_status', $status);
+			$payment->save();
+		}
+		else
+		{
+			$html = "";
+		}
+		
+		$this->getResponse()->setBody($html . Mage::helper('Maxima_Cielo')->xmlToHtml($xml));
 	}
 } 
