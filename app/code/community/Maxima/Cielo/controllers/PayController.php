@@ -69,6 +69,11 @@ class Maxima_Cielo_PayController extends Mage_Core_Controller_Front_Action
 		$payment->setAdditionalInformation('Cielo_eci', $eci);
 		$payment->save();
 		
+		// envia email de nova compra
+		$order->sendNewOrderEmail();
+		$order->setEmailSent(true);
+		$order->save();
+		
 		// possiveis status 
 		// -1 nao foi possivel consultar
 		// 0 criada
@@ -114,11 +119,6 @@ class Maxima_Cielo_PayController extends Mage_Core_Controller_Front_Action
 		{
 			
 		}
-		
-		// envia email de nova compra
-		$order->sendNewOrderEmail();
-		$order->setEmailSent(true);
-		$order->save();
 		
 		// limpa juros, caso nao tenha sido zerado
 		$quote = Mage::getSingleton('checkout/session')->getQuote();
