@@ -79,13 +79,13 @@
 			<div class="input-box">
 				<input name="payment[cc_number]" type="text" value="" id="cielo-cc-card-number" 
 					   title="<?php echo $this->__('Card Number') ?>" class="input-text required-entry validate-cc-number" 
-					   maxlength="16" onkeydown="return denyNotNumberDc(this, event);" autocomplete="off" />
+					   maxlength="16" onkeydown="return denyNotNumberCc(this, event);" autocomplete="off" />
 			</div>
 		</li>
 		<li>
 			<label for="cielo-cc-security-code" class="required"><em>*</em><?php echo $this->__('Verification Code') ?></label><br />
 			<div class="input-box">
-				<input name="payment[cc_cid]" type="text" value="" id="cielo-cc-security-code" title="<?php echo $this->__('Verification Code') ?>" class="input-text  required-entry" style="width: 50px;" maxlength="4" onkeydown="return denyNotNumberDc(this, event);"
+				<input name="payment[cc_cid]" type="text" value="" id="cielo-cc-security-code" title="<?php echo $this->__('Verification Code') ?>" class="input-text  required-entry" style="width: 50px;" maxlength="4" onkeydown="return denyNotNumberCc(this, event);"
 				autocomplete="off" />
 			</div>
 		</li>
