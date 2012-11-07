@@ -143,11 +143,11 @@
 		</layout>
 		<translate>
 			<modules>
-				<translations>
+				<Maxima_Cielo>
 					<files>
 						<default>Maxima_Cielo.csv</default>
 					</files>
-				</translations>
+				</Maxima_Cielo>
 			</modules>
 		</translate>
 	</frontend>
@@ -155,11 +155,11 @@
 	<adminhtml>
 		<translate>
 			<modules>
-				<translations>
+				<Maxima_Cielo>
 					<files>
 						<default>Maxima_Cielo.csv</default>
 					</files>
-				</translations>
+				</Maxima_Cielo>
 			</modules>
 		</translate>
 	</adminhtml>
