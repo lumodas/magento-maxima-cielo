@@ -200,4 +200,18 @@ class Maxima_Cielo_AdminController extends Mage_Adminhtml_Controller_Action
 		
 		$this->getResponse()->setBody($html . Mage::helper('Maxima_Cielo')->xmlToHtml($xml));
 	}
+	
+	
+	/**
+	 * 
+	 * Funcao responsavel por conferir se usuario pode realizar a acao
+	 * 
+	 */
+	
+	protected function _isAllowed()
+	{
+		$action = 'sales/order/actions/cielo-' . $this->getRequest()->getActionName();
+		
+		return Mage::getSingleton('admin/session')->isAllowed($action);
+	}
 } 
