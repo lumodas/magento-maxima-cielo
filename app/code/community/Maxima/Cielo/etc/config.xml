@@ -162,6 +162,35 @@
 				</Maxima_Cielo>
 			</modules>
 		</translate>
+		<acl>
+			<resources>
+				<admin>
+					<children>
+						<sales>
+							<children>
+								<order>
+									<children>
+										<actions>
+											<children>
+												<cielo-capture translate="title">
+													<title>Cielo - Capture</title>
+												</cielo-capture>
+												<cielo-cancel translate="title">
+													<title>Cielo - Cancel</title>
+												</cielo-cancel>
+												<cielo-consult translate="title">
+													<title>Cielo - Consult WebService</title>
+												</cielo-consult>
+											</children>
+										</actions>
+									</children>
+								</order>
+							</children>
+						</sales>
+					</children>
+				</admin>
+			</resources>
+		</acl>
 	</adminhtml>
 	
 	
