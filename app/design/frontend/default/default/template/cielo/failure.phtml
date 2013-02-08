@@ -56,7 +56,7 @@
         echo "Seu pagamento não foi realizado com sucesso.<br />" . 
              "O TID da sua transação na Cielo é <b>" . $this->getCieloTid() . 
              "</b>.<br />" . 
-             "Mensagem de retorno da Cielo: <b>" . $this->getErrorMessage() . 
+             "Status de retorno da Cielo: <b>" . Mage::helper('Maxima_Cielo')->getStatusMessage($this->getCieloStatus()) . 
              "</b>.<br />" . 
              "Para maiores informações, por favor acesse o link do pedido acima ou entre em contato conosco.";
     ?>
