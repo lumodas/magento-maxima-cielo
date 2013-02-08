@@ -52,21 +52,20 @@ class Maxima_Cielo_PayController extends Mage_Core_Controller_Front_Action
 		Mage::getSingleton('core/session')->unsetData('cielo-transaction');
 		$autoCapture = Mage::getStoreConfig('payment/Maxima_Cielo_Cc/auto_capture');
 		
-		$this->loadLayout();
-		$block = $this->getLayout()->getBlock('Maxima_Cielo.success');
-		
 		// realiza consulta ao status do pagamento
 		$status = $webServiceOrder->requestConsultation();
 		$xml = $webServiceOrder->getXmlResponse();
 		$eci = (isset($xml->autenticacao->eci)) ? ((string) $xml->autenticacao->eci) : "";
 		
-		$block->setCieloStatus($status);
-		$block->setCieloTid($webServiceOrder->tid);
+		// armazena informacoes adicionais no pedido
+        $additionaldata = unserialize($payment->getData('additional_data'));
+		
 		$payment->setAdditionalInformation('Cielo_tid', $webServiceOrder->tid);
 		$payment->setAdditionalInformation('Cielo_status', $status);
 		$payment->setAdditionalInformation('Cielo_cardType', $webServiceOrder->ccType);
 		$payment->setAdditionalInformation('Cielo_installments', $webServiceOrder->paymentParcels);
 		$payment->setAdditionalInformation('Cielo_eci', $eci);
+		$payment->setAdditionalInformation('Cielo_error', $webServiceOrder->getError());
 		$payment->save();
 		
 		// envia email de nova compra
@@ -87,8 +86,11 @@ class Maxima_Cielo_PayController extends Mage_Core_Controller_Front_Action
 		// 9 cancelada
 		// 10 em autenticacao
 		
+		// define se vai para a pagina de sucesso ou de falha
+		$targetAction = "";
+		
 		// tudo ok, transacao aprovada, salva no banco
-		if($block->getCieloStatus() == 6)
+		if($status == 6)
 		{
 			// se jah foi capturado e nao era pra ter sido, tem algo de errado
 			if(!$autoCapture && $payment->getMethodInstance()->getCode() == "Maxima_Cielo_Cc")
@@ -108,16 +110,18 @@ class Maxima_Cielo_PayController extends Mage_Core_Controller_Front_Action
 					$invoice->save();
 				}
 			}
+			
+			$targetAction = "success";
 		}
 		// ainda em processo de autenticacao, nao faz nada... aguardar
-		else if($block->getCieloStatus() == 10)
+		else if($status == 10 || $status == 2 || $status == 4)
 		{
-			
+			$targetAction = "success";
 		}
 		// por algum motivo deu errado, deve tentar denovo
 		else
 		{
-			
+			$targetAction = "failure";
 		}
 		
 		// limpa juros, caso nao tenha sido zerado
@@ -132,41 +136,31 @@ class Maxima_Cielo_PayController extends Mage_Core_Controller_Front_Action
 			$quote->save();
 		}
 		
+		$this->_redirect('cielo/pay/' . $targetAction);
+	}
+	
+	
+	/**
+	 * 
+	 * Funcao responsavel renderizar tela de sucesso
+	 * 
+	 */
+	
+	public function successAction()
+	{
+		$this->loadLayout();
 		$this->renderLayout();
 	}
 	
 	/**
 	 * 
-	 * Funcao responsavel por tratar o caso de erro na comunicacao com o servidor da 
-	 * Cielo. Limpa objeto da sessao e mostra mensagem de erro.
+	 * Funcao responsavel renderizar tela de falha
 	 * 
 	 */
 	
 	public function failureAction()
 	{
-		if(!Mage::getSingleton('core/session')->getData('cielo-transaction'))
-		{
-			$url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
-			Mage::app()->getFrontController()->getResponse()->setRedirect($url);
-			return;
-		}
-		
-		$orderId = Mage::getSingleton('checkout/session')->getLastOrderId();
-		$order = Mage::getModel('sales/order')->load($orderId);
-		$payment = $order->getPayment();
-		
-		// pega o pedido armazenado
-		$webServiceOrder = Mage::getSingleton('core/session')->getData('cielo-transaction');
-		Mage::getSingleton('core/session')->unsetData('cielo-transaction');
-		
 		$this->loadLayout();
-		$block = $this->getLayout()->getBlock('Maxima_Cielo.failure');
-		
-		// preenche erro
-		$payment->setAdditionalInformation('Cielo_error', true);
-		$payment->setAdditionalInformation('Cielo_error_msg', $webServiceOrder->getError());
-		$payment->save();
-		
 		$this->renderLayout();
 	}
 }
