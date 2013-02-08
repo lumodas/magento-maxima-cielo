@@ -115,13 +115,18 @@ class Maxima_Cielo_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function calcInstallmentValue($total, $interest, $periods)
     {
+		// confere se taxa de juros = 0 
+		if($interest <= 0)
+		{
+			return ($total / $periods);
+		}
+		
 		/* 
 		 * Formula do coeficiente:
 		 * 
 		 * juros / ( 1 - 1 / (1 + i)^n )
 		 * 
 		 */
-		
 		
 		// calcula o coeficiente, seguindo a formula acima
 		$coefficient = pow((1 + $interest), $periods);
