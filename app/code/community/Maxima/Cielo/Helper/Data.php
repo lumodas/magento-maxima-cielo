@@ -97,7 +97,7 @@ class Maxima_Cielo_Helper_Data extends Mage_Core_Helper_Abstract
 				$label = "Em cancelamento";
 				break;
 			default:
-				$label = "Erro (" . $statusCode . ")";
+				$label = "Transação não realizada";
 		}
 		
 		return htmlentities($label);

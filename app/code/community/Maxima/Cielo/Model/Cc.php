@@ -441,16 +441,7 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 		
 		if($redirectUrl == false)
 		{
-			// caso nao haja autenticacao, enviar para o tratamento final do pedido
-			if(($this->getConfigData('buypage', $storeId) == "loja") && ($webServiceOrderData['autorize'] == '3'))
-			{
-				return Mage::getUrl('cielo/pay/verify');
-			}
-			// erro nao indentificado
-			else
-			{
-				return Mage::getUrl('cielo/pay/failure');
-			}
+			return Mage::getUrl('cielo/pay/verify');
 		}
 		else
 		{

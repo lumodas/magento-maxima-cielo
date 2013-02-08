@@ -149,6 +149,7 @@ class Maxima_Cielo_Model_WebServiceOrder
 		if($maxAttempts == 0)
 		{
 			Mage::log("[CIELO] Não conseguiu consultar o servidor.");
+			$this->_transactionError = "[CIELO] Não conseguiu consultar o servidor.";
 		}
 		
 		return false;

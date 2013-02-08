@@ -90,10 +90,8 @@ class Maxima_Cielo_Block_Failure extends Mage_Checkout_Block_Onepage_Success
         {
             $this->_payment = $this->getOrder()->getPayment();
         }
-        
-		$errorMsg = $this->_payment->getAdditionalInformation('Cielo_error');
 		
-        return (($errorMsg == "") ? "Erro inesperado" : $errorMsg);
+		return $this->_payment->getAdditionalInformation('Cielo_error');
     }
 }
  
