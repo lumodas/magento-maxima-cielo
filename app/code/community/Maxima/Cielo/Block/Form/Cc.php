@@ -87,10 +87,17 @@ class Maxima_Cielo_Block_Form_Cc extends Mage_Payment_Block_Form
     	$minInstallmentValue = floatval(Mage::getStoreConfig('payment/Maxima_Cielo_Cc/min_parcels_value'));
 		
 		$minInstallmentValue = ($minInstallmentValue <= 5.01) ? 5.01 : $minInstallmentValue;
+		if(Mage::helper('Maxima_Cielo')->isAdmin())
+		{
+			$quote = Mage::getSingleton('adminhtml/session_quote')->getQuote();
+		}
+		else
+		{
+			$quote = Mage::getSingleton('checkout/cart')->getQuote();
+		}
 		
 		// atualiza taxa de juros para 0,
 		// caso o usuario tenha voltado na navegacao
-		$quote = Mage::getSingleton('checkout/cart')->getQuote();
 		$quote->setInterest(0.0);
 		$quote->setBaseInterest(0.0);
 		
@@ -102,7 +109,7 @@ class Maxima_Cielo_Block_Form_Cc extends Mage_Payment_Block_Form
 		$interestValue = floatval(Mage::getStoreConfig('payment/Maxima_Cielo_Cc/installment_interest_value'));
 		
 		// pega valores do pedido
-		$total = Mage::getSingleton('checkout/cart')->getQuote()->getGrandTotal();
+		$total = $quote->getGrandTotal();
 		
 		$installments = array();
 		

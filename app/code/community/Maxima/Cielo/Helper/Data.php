@@ -169,4 +169,24 @@ class Maxima_Cielo_Helper_Data extends Mage_Core_Helper_Abstract
 		}
 	}
     
+	/**
+     * 
+     * Indica se estah no ambiente admin
+     * 
+     */
+	
+	public function isAdmin()
+    {
+        if(Mage::app()->getStore()->isAdmin())
+        {
+            return true;
+        }
+
+        if(Mage::getDesign()->getArea() == 'adminhtml')
+        {
+            return true;
+        }
+
+        return false;
+    }
 }
