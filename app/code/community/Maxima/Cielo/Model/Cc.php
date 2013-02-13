@@ -54,11 +54,11 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 		);
 		
 		$info->setCcType($data->getCcType())
-			 ->setCcNumber(Mage::helper('core')->encrypt($data->getCcNumber()))
+			 ->setCcNumber($data->getCcNumber())
 			 ->setCcOwner($data->getCcOwner())
 			 ->setCcExpMonth($data->getCcExpMonth())
 			 ->setCcExpYear($data->getCcExpYear())
-			 ->setCcCid(Mage::helper('core')->encrypt($data->getCcCid()))
+			 ->setCcCid($data->getCcCid())
 			 ->setAdditionalData(serialize($additionaldata));
 		
 		
@@ -119,12 +119,10 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 			return $this;
 		
 		$availableTypes = Mage::getModel('Maxima_Cielo/cc_types')->getCodes();
-		$ccNumber = Mage::helper('core')->decrypt($info->getCcNumber());
-
+		
 		// remove delimitadores do cartao, como "-" e espaco
-		$ccNumber = preg_replace('/[\-\s]+/', '', $ccNumber);
-		$info->setCcNumber(Mage::helper('core')->encrypt($ccNumber));
-
+		$ccNumber = preg_replace('/[\-\s]+/', '', $info->getCcNumber());
+		
 		$ccType = '';
 		
 		// valida o numero do cartao de credito
@@ -194,7 +192,7 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 			$verificationRegEx = $this->getVerificationRegEx();
 			$regExp = isset($verificationRegEx[$info->getCcType()]) ? $verificationRegEx[$info->getCcType()] : '';
 			
-			if ($regExp != '' && (!$info->getCcCid() || !preg_match($regExp, Mage::helper('core')->decrypt($info->getCcCid()))))
+			if ($regExp != '' && (!$info->getCcCid() || !preg_match($regExp, $info->getCcCid())))
 			{
 				$errorMsg = Mage::helper('Maxima_Cielo')->__('Please enter a valid credit card verification number.');
 			}
@@ -425,9 +423,9 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 			
 			$ownerData = array
 			(
-				'number' 	=> Mage::helper('core')->decrypt($info->getCcNumber()),
+				'number' 	=> $info->getCcNumber(),
 				'exp_date' 	=> $info->getCcExpYear() . $ccExpMonth,
-				'sec_code' 	=> Mage::helper('core')->decrypt($info->getCcCid()),
+				'sec_code' 	=> $info->getCcCid(),
 				'name' 		=> $info->getCcOwner()
 			);
 		}
