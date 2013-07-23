@@ -39,6 +39,42 @@ class Maxima_Cielo_Block_Adminhtml_Order_View extends Mage_Adminhtml_Block_Sales
 			return;
 		}
 		
+		if($method == "Maxima_Cielo_Cc" || $method == "Maxima_Cielo_Dc")
+		{
+			if ($this->_isAllowedAction("cielo-request"))
+			{
+				if($tid)
+				{
+					$label = Mage::helper('Maxima_Cielo')->__('Redo Cielo Transaction');
+				}
+				else
+				{
+					$label = Mage::helper('Maxima_Cielo')->__('Create Cielo Transaction');
+				}
+				
+				$this->_addButton('maxima_cielo_request', array
+				(
+					'label'     => $label,
+					'onclick'   => "requestCieloOrder('" . $tid . "', " . $this->getOrder()->getId() . ");",
+					'class'     => 'go'
+				));
+			}
+			
+			
+			
+			
+			
+			if ($this->_isAllowedAction("cielo-consult"))
+			{
+				$this->_addButton('maxima_cielo_consult', array
+				(
+					'label'     => Mage::helper('Maxima_Cielo')->__('Consult WebService'),
+					'onclick'   => "loadCieloWebServiceData('" . $tid . "', " . $this->getOrder()->getId() . ");",
+					'class'     => 'go'
+				));
+			}
+		}
+		
 		if($method == "Maxima_Cielo_Cc")
 		{
 			if ($this->_isAllowedAction("cielo-capture"))
@@ -47,19 +83,6 @@ class Maxima_Cielo_Block_Adminhtml_Order_View extends Mage_Adminhtml_Block_Sales
 				(
 					'label'     => Mage::helper('Maxima_Cielo')->__('Capture'),
 					'onclick'   => "captureCieloOrder('" . $tid . "', " . $this->getOrder()->getId() . ");",
-					'class'     => 'go'
-				));
-			}
-		}
-		
-		if($method == "Maxima_Cielo_Cc" || $method == "Maxima_Cielo_Dc")
-		{
-			if ($this->_isAllowedAction("cielo-consult"))
-			{
-				$this->_addButton('maxima_cielo_consult', array
-				(
-					'label'     => Mage::helper('Maxima_Cielo')->__('Consult WebService'),
-					'onclick'   => "loadCieloWebServiceData('" . $tid . "', " . $this->getOrder()->getId() . ");",
 					'class'     => 'go'
 				));
 			}

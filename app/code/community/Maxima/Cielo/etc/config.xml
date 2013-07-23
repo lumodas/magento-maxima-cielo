@@ -183,6 +183,9 @@
 									<children>
 										<actions>
 											<children>
+												<cielo-request translate="title">
+													<title>Cielo - Request Transaction</title>
+												</cielo-request>
 												<cielo-capture translate="title">
 													<title>Cielo - Capture</title>
 												</cielo-capture>
