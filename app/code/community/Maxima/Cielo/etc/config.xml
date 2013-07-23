@@ -80,17 +80,6 @@
 				</rewrite>
 			</adminhtml>
 		</blocks>
-		<events>
-			<checkout_submit_all_after>
-				<observers>
-					<Maxima_Cielo_Model_Observer>
-						<type>singleton</type>
-						<class>Maxima_Cielo/observer</class>
-						<method>adminOrderTransaction</method>
-					</Maxima_Cielo_Model_Observer>
-				</observers>
-			</checkout_submit_all_after>     
-		</events>
 		<sales>
 			<quote>
 				<totals>
@@ -183,9 +172,6 @@
 									<children>
 										<actions>
 											<children>
-												<cielo-request translate="title">
-													<title>Cielo - Request Transaction</title>
-												</cielo-request>
 												<cielo-capture translate="title">
 													<title>Cielo - Capture</title>
 												</cielo-capture>

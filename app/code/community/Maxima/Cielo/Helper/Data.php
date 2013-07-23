@@ -97,7 +97,7 @@ class Maxima_Cielo_Helper_Data extends Mage_Core_Helper_Abstract
 				$label = "Em cancelamento";
 				break;
 			default:
-				$label = "Transação não realizada";
+				$label = "Erro (" . $statusCode . ")";
 		}
 		
 		return htmlentities($label);
@@ -115,18 +115,18 @@ class Maxima_Cielo_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function calcInstallmentValue($total, $interest, $periods)
     {
-		// confere se taxa de juros = 0 
-		if($interest <= 0)
-		{
-			return ($total / $periods);
-		}
-		
 		/* 
 		 * Formula do coeficiente:
 		 * 
 		 * juros / ( 1 - 1 / (1 + i)^n )
 		 * 
 		 */
+		
+		// confere se taxa de juros = 0 
+		if($interest <= 0)
+		{
+			return ($total / $periods);
+		}
 		
 		// calcula o coeficiente, seguindo a formula acima
 		$coefficient = pow((1 + $interest), $periods);
@@ -169,24 +169,4 @@ class Maxima_Cielo_Helper_Data extends Mage_Core_Helper_Abstract
 		}
 	}
     
-	/**
-     * 
-     * Indica se estah no ambiente admin
-     * 
-     */
-	
-	public function isAdmin()
-    {
-        if(Mage::app()->getStore()->isAdmin())
-        {
-            return true;
-        }
-
-        if(Mage::getDesign()->getArea() == 'adminhtml')
-        {
-            return true;
-        }
-
-        return false;
-    }
 }
