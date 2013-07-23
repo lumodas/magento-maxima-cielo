@@ -54,11 +54,11 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 		);
 		
 		$info->setCcType($data->getCcType())
-			 ->setCcNumber($data->getCcNumber())
+			 ->setCcNumber(Mage::helper('core')->encrypt($data->getCcNumber()))
 			 ->setCcOwner($data->getCcOwner())
 			 ->setCcExpMonth($data->getCcExpMonth())
 			 ->setCcExpYear($data->getCcExpYear())
-			 ->setCcCid($data->getCcCid())
+			 ->setCcCid(Mage::helper('core')->encrypt($data->getCcCid()))
 			 ->setAdditionalData(serialize($additionaldata));
 		
 		
@@ -119,10 +119,12 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 			return $this;
 		
 		$availableTypes = Mage::getModel('Maxima_Cielo/cc_types')->getCodes();
-		
+		$ccNumber = Mage::helper('core')->decrypt($info->getCcNumber());
+
 		// remove delimitadores do cartao, como "-" e espaco
-		$ccNumber = preg_replace('/[\-\s]+/', '', $info->getCcNumber());
-		
+		$ccNumber = preg_replace('/[\-\s]+/', '', $ccNumber);
+		$info->setCcNumber(Mage::helper('core')->encrypt($ccNumber));
+
 		$ccType = '';
 		
 		// valida o numero do cartao de credito
@@ -192,7 +194,7 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 			$verificationRegEx = $this->getVerificationRegEx();
 			$regExp = isset($verificationRegEx[$info->getCcType()]) ? $verificationRegEx[$info->getCcType()] : '';
 			
-			if ($regExp != '' && (!$info->getCcCid() || !preg_match($regExp, $info->getCcCid())))
+			if ($regExp != '' && (!$info->getCcCid() || !preg_match($regExp, Mage::helper('core')->decrypt($info->getCcCid()))))
 			{
 				$errorMsg = Mage::helper('Maxima_Cielo')->__('Please enter a valid credit card verification number.');
 			}
@@ -423,9 +425,9 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 			
 			$ownerData = array
 			(
-				'number' 	=> $info->getCcNumber(),
+				'number' 	=> Mage::helper('core')->decrypt($info->getCcNumber()),
 				'exp_date' 	=> $info->getCcExpYear() . $ccExpMonth,
-				'sec_code' 	=> $info->getCcCid(),
+				'sec_code' 	=> Mage::helper('core')->decrypt($info->getCcCid()),
 				'name' 		=> $info->getCcOwner()
 			);
 		}
@@ -439,7 +441,16 @@ class Maxima_Cielo_Model_Cc extends Mage_Payment_Model_Method_Abstract
 		
 		if($redirectUrl == false)
 		{
-			return Mage::getUrl('cielo/pay/verify');
+			// caso nao haja autenticacao, enviar para o tratamento final do pedido
+			if(($this->getConfigData('buypage', $storeId) == "loja") && ($webServiceOrderData['autorize'] == '3'))
+			{
+				return Mage::getUrl('cielo/pay/verify');
+			}
+			// erro nao indentificado
+			else
+			{
+				return Mage::getUrl('cielo/pay/failure');
+			}
 		}
 		else
 		{

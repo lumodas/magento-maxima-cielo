@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 /*
  * Maxima Cielo Module - payment method module for Magento, integrating
@@ -51,12 +51,7 @@
 <?php endif;?>
 <br />
 <ul>
-	<li>
-	<?php
-		echo "Sua compra foi faturada com êxito.<br />" .
-             "O ID da sua transação na Cielo é <b>" . $this->getCieloTid() . "</b>.";
-	?>
-	</li>
+	<li><?php echo $this->getCieloDataHtml(); ?></li>
 </ul>
 <div class="buttons-set">
     <button type="button" class="button" title="<?php echo $this->__('Continue Shopping') ?>" onclick="window.location='<?php echo $this->getUrl() ?>'"><span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>

@@ -118,30 +118,6 @@ Cartão de Crédito Cielo
 	}
 	
 	
-	function requestCieloOrder(tid, orderId)
-	{
-		var msg = (tid == "") ? "<?php echo $this->__("Do You really want to open and transaction?"); ?>" 
-							  : "<?php echo $this->__("Do You really want to open and transaction, cancelling the current one?"); ?>";
-		
-		var newRequest = confirm(msg);
-		
-		if(newRequest)
-		{
-			var url = '<?php echo $this->getUrl('cielo/admin/request') ?>';
-			
-			new Ajax.Request(url,
-			{
-				method		: 'post',
-				parameters	: "tid=" + tid + "&order=" + orderId,
-				onComplete	: function(transport)
-				{
-					maximaModalWindow("Abrindo Transação Cielo", transport.responseText, 600, 400);
-				}
-			});
-		}
-	}
-	
-	
 	function maximaModalWindow(title, content, width, height)
 	{
 		$$('HTML')[0].setStyle({overflow: 'hidden'});

@@ -51,16 +51,7 @@
 <?php endif;?>
 <br />
 <ul>
-    <li>
-    <?php 
-        echo "Seu pagamento não foi realizado com sucesso.<br />" . 
-             "O TID da sua transação na Cielo é <b>" . $this->getCieloTid() . 
-             "</b>.<br />" . 
-             "Status de retorno da Cielo: <b>" . Mage::helper('Maxima_Cielo')->getStatusMessage($this->getCieloStatus()) . 
-             "</b>.<br />" . 
-             "Para maiores informações, por favor acesse o link do pedido acima ou entre em contato conosco.";
-    ?>
-    </li>
+	<li><?php echo $this->__('Houve um problema ao tentar realizar o pagamento. Para maiores informações, por favor entre em contato.'); ?></li>
 </ul>
 <div class="buttons-set">
     <button type="button" class="button" title="<?php echo $this->__('Continue Shopping') ?>" onclick="window.location='<?php echo $this->getUrl() ?>'"><span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>
