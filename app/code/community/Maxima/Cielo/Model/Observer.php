@@ -33,7 +33,7 @@ class Maxima_Cielo_Model_Observer
 		$paymentMethod = $quote->getPayment()->getMethodInstance();
 		
 		// caso seja buy page loja, jah realiza a abertura da transacao na cielo
-		if($paymentMethod->getConfigData('buypage', $paymentMethod->->getStoreId()) == "loja")
+		if($paymentMethod->getConfigData('buypage', $paymentMethod->getStoreId()) == "loja")
 		{
 			$paymentMethod->getOrderPlaceRedirectUrl();
 		}
